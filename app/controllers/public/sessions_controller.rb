@@ -7,6 +7,11 @@ class Public::SessionsController < Devise::SessionsController
     sign_in user
     redirect_to posts_path, notice: "ゲストでログインしました"
   end
+  
+  def after_sign_in_path_for(resource)
+    flash[:notice] = "ようこそ、#{current_user.name}さん！"
+    posts_path
+  end
   # GET /resource/sign_in
   # def new
   #   super

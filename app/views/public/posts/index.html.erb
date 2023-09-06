@@ -1,2 +1,47 @@
-<h1>Public::Posts#index</h1>
-<p>Find me in app/views/public/posts/index.html.erb</p>
+<div class="container">
+  <div class="search_form">
+    <%= form_with model: @post, url: search_posts_path do |f| %>
+      
+      <%= f.text_field :shop_name %>
+      <%= f.submit '検索', class:'btn btn-success'%>
+    <% end %>
+    <%= link_to 'タグ一覧から探す', search_tags_path, class:'btn btn-success' %>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 col-md-3 col-lg-3 border">
+      <%= image_tag current_user.get_user_image(100, 100) %>
+      <span><%= current_user.most_favorite %></span>
+      <%= link_to user_path(current_user.id) do %><%= current_user.name %><% end %>
+      <p><%= current_user.introduction%></p>
+      <ul>
+        <li>フォロー数</li>
+        <li>フォロワー数</li>
+      </ul>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-6">
+      <% @posts.each do |post| %>
+        <div class="post_item">
+          <div class="post_item_header">
+            <%= post.shop_genre %>
+            <%= post.prefecture %>
+          </div>
+          <div class="post_item_main">
+            <%= link_to post_path(post.id) do %>
+              <%= image_tag post.post_images[0].variant(resize:'120x100') %>
+              <h3><%= post.shop_name %></h3>
+            <% end %>
+            <span><%= post.favorites.count %>いいね</span>
+            <% post.taggings.limit(5).tags.each do |tag| %>
+              <%= form_with model: @tag, url: search_tags_path do |f| %>
+                <%=f,hidden_field :name, value => tag.id %>
+                <%= f.submit "#{tag.name}" %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <div class="col-sm-12 col-md-3 col-lg-3">
+      
+    </div>
+  </div>

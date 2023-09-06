@@ -1,0 +1,72 @@
+<br>
+<br>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 mx-auto">
+
+        <div class="row">
+          <div class="col-md-2">
+            <h4 style="background-color:#C2EEFF">　 ログイン　</h4>
+          </div>
+        </div>
+        <br>
+
+        <div class="row">
+          <div class="col-md-4 mb-3 text-left">
+            <h5 style="background-color:#C2EEFF">　会員の方はこちらからログイン　</h5>
+          </div>
+        </div>
+        <br>
+
+        <%= form_with model: resource, scope: resource_name, url: session_path(resource_name) do |f| %>
+          <div class="row">
+            <div class="col-md-4">
+              <%= f.label :メールアドレス %>
+            </div>
+            <div class="col-md-8 mb-5">
+              <div class="field">
+                <%= f.email_field :email, size: "50", placeholder: "sample@example.com" %>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">
+              <%= f.label :パスワード %>
+            </div>
+            <div class="col-md-8 mb-5">
+              <div class="field">
+                <%= f.password_field :password, size: "50" %>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4"></div>
+              <div class="col-md-8 mb-3">
+                <%= f.submit "ログイン", class: "btn btn-info w-25" %>
+              </div>
+          </div>
+        <% end %>
+        <br>
+
+        <div class="row">
+          <div class="col-md-3 mb-3 text-left">
+            <h5 style="background-color:#C2EEFF"> 会員登録がお済みでない方</h5><br>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-7 mb-5 text-right">
+            <h6><%= render "public/shared/links" %>から新規登録を行ってください。</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br>
+
+
+
+
+
