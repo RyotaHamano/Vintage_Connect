@@ -28,10 +28,4 @@ class Post < ApplicationRecord
     end
   end
   
-  
-  
-  def narrow_prefecture(region)
-    
-  end
-  
 end

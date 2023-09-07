@@ -18,15 +18,44 @@ class Public::PostsController < ApplicationController
   end
   
   def new
+    if session[:new_post]
+      @post = Post.new(session[:new_post])
+    else
+      @post = Post.new
+    end
   end
   
   def tag_select
+    @post = Post.new(post_params)
+    session[:new_post] = @post
+    redirect_to tag_select_display_posts_path
+  end
+  
+  def tag_select_display
+    @post = Post.new(session[:new_post])
+    @tags = Tag.where(is_available: false)
+    @tag = Tag.new
   end
   
   def preview
+    @post = Post.new(session[:new_post])
+    @tags = Tag.where(id: params[:tag_ids])
+    session[:tag_ids] = params[:tag_ids]
   end
   
-  def complete
+  def create
+    @post = Post.new(session[:new_post])
+    @tags = Tag.where(id: session[:tag_ids])
+    @post.save
+    @tags.each do |tag|
+      tagging = Tagging.new
+      tagging.post_id = @post.id
+      tagging.tag_id = tag.id
+      tagging.save
+    end
+    session.delete(:new_post)
+    session.delete(:tag_ids)
+    redirect_to post_path(@post.id)
   end
 
   def show
@@ -45,6 +74,12 @@ class Public::PostsController < ApplicationController
   end
   
   def destroy
+  end
+  
+  private
+  
+  def post_params
+    params.require(:post).permit(:shop_name, :shop_genre, :prefecture, :address, :post_images, :review, :rate, :reading_status, :user_id)
   end
   
 end

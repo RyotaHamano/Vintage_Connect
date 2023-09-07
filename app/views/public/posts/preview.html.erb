@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 mx-auto">
+      <div class="post_header">
+        <ul>
+          <li><%= @post.shop_genre_i18n %></li>
+          <li><%= @post.prefecture_i18n %></li>
+          <li><i class="fa-regular fa-star"></i><%= @post.rate %></li>
+        </ul>
+      </div>
+      <div class="post_main">
+        <div class="post_main_header">
+          <h3><%= @post.shop_name %></h3>
+          <%= @tags.each do |tag| %>
+            <%= tag.name %>
+          <% end %>
+        </div>
+        <div class="post_main_image_review">
+          <div class="post_main_image">
+            <%= @post.post_images.each do |image| %>
+              <%= image_tag image.variant(resize: "500x400") %>
+            <% end %>
+          </div>
+          <div class="post_main_review">
+            <%= @post.review %>
+          </div>
+        </div>
+        <i class="fa-regular fa-heart"></i>
+      </div>
+      <%= form_with url: posts_path do |f| %>
+        <%= f.submit '投稿する', class:'btn btn-info'%>
+      <% end %>
+    </div>
+  </div>
+</div>

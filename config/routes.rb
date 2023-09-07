@@ -15,8 +15,8 @@ Rails.application.routes.draw do
       collection do
         get 'search'
         post 'tag_select'
-        post 'preview'
-        post 'complete'
+        get 'tag_select_display'
+        get 'preview'
       end
       
       member do
