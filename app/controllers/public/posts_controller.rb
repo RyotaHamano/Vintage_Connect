@@ -1,8 +1,17 @@
 class Public::PostsController < ApplicationController
   
   def index
-    @post = Post.new
-    @posts = Post.all
+    @posts = Post.where(reading_status: false)
+    if params[:sort_rule]
+      @posts = @posts.sort_branch(params[:sort_rule])
+    end
+    if params[:shop_genre]
+      @posts = @posts.where(shop_genre: params[:shop_genre])
+    end
+    if params[:prefecture]
+      @posts = @posts.where(prefecture: params[:prefecture])
+    end
+    @posts = @posts.page(params[:page])
   end
   
   def search

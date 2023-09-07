@@ -3,6 +3,7 @@ class Post < ApplicationRecord
   has_many_attached :post_images
   
   has_many :taggings, dependent: :destroy
+  has_many :tags, through: :taggings
   has_many :favorites, dependent: :destroy
   has_many :comments, dependent: :destroy
   belongs_to :user
@@ -14,5 +15,23 @@ class Post < ApplicationRecord
                     nagasaki: 41, kumamoto: 42, oita: 43, miyazaki: 44, kagoshima: 45, okinawa: 46}
   
   enum shop_genre: {old_clothing: 0, old_item: 1, old_tool: 2, old_interior: 3, antique: 4}
+  
+  def sort_branch(number)
+    if number == 0
+      self.order(id: :desc)
+    elsif number == 1
+      self.order(id: :asc)
+    elsif number == 2
+      self.order(rate: :desc)
+    elsif number == 3
+      self.includes(:favorites).sort{|a,b| b.favorites.size <=> a.favorites.size }
+    end
+  end
+  
+  
+  
+  def narrow_prefecture(region)
+    
+  end
   
 end
