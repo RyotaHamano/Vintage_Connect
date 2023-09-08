@@ -11,7 +11,7 @@
       <div class="post_main">
         <div class="post_main_header">
           <h3><%= @post.shop_name %></h3>
-          <%= @tags.each do |tag| %>
+          <% @tags.each do |tag| %>
             <%= tag.name %>
           <% end %>
         </div>

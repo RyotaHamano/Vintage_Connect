@@ -1,26 +1,26 @@
 <div class="container">
   <div class="row mx-auto">
     <p>10個まで選択可能です</p>
-    <%= form_with url: preview_posts_path do |f| %>
+    <%= form_with url: preview_posts_path, method: :get do |f| %>
     <div class="col-sm-12 col-md-8 col-lg-8">
       <div class="form-group">
         <%= f.collection_check_boxes :tag_ids, @tags, :id, :name %>
       </div>
     </div>
     <div class="col-sm-12 col-md-4 col-lg-4">
+      <div class="selected_tags"></div>
+      <div class="form-group">
+        <%= f.submit 'プレビューに進む'%>
+        <% end %>
+      </div>
       <div class="create_tag">
-        <% form_with model:@tag, url: tags_path do |form| %>
+        <%= form_with model:@tag, url: tags_path do |form| %>
           <%= form.text_field :name, placeholder: "新規タグ名" %>
           <%= form.hidden_field :user_id, :value => current_user.id %>
           <%= form.hidden_field :is_available, :value => false %>
           <%= form.submit 'タグを作成', class:'btn btn-info' %>
         <% end %>
       </div>
-      <div class="selected_tags"></div>
-      <div class="form-group">
-        <%= f.submit 'プレビューに進む'%>
-      </div>
     </div>
-    <% end %>
   </div>
 </div>

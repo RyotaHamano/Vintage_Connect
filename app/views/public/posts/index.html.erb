@@ -16,6 +16,7 @@
         <li>フォロー数</li>
         <li>フォロワー数</li>
       </ul>
+      <%= link_to '投稿する', new_post_path, class:'btn btn-info' %>
     </div>
     <div class="col-sm-12 col-md-6 col-lg-6">
       <% @posts.each do |post_item| %>
@@ -32,14 +33,14 @@
             <span><%= post_item.favorites.count %>いいね</span>
             <% post_item.tags.limit(5).each do |tag| %>
               <%= form_with model: @tag, url: search_tags_path do |f| %>
-                <%=f,hidden_field :tag_id, value => tag.id %>
+                <%=f.hidden_field :tag_id, value => tag.id %>
                 <%= f.submit "#{tag.name}" %>
               <% end %>
             <% end %>
           </div>
         </div>
       <% end %>
-      <%= paginate posts %>
+      <%= paginate @posts %>
     </div>
     <div class="col-sm-12 col-md-3 col-lg-3">
       <div class="sort_narrow">

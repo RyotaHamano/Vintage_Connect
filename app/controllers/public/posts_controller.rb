@@ -46,6 +46,7 @@ class Public::PostsController < ApplicationController
     @post = Post.new(session[:new_post])
     @tags = Tag.where(is_available: false)
     @tag = Tag.new
+    byebug
   end
   
   def preview
@@ -122,7 +123,7 @@ class Public::PostsController < ApplicationController
   private
   
   def post_params
-    params.require(:post).permit(:shop_name, :shop_genre, :prefecture, :address, :post_images, :review, :rate, :reading_status, :user_id)
+    params.require(:post).permit(:shop_name, :shop_genre, :prefecture, :address, :review, :rate, :reading_status, :user_id, post_images:[])
   end
   
 end
