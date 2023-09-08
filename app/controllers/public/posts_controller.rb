@@ -59,21 +59,53 @@ class Public::PostsController < ApplicationController
   end
 
   def show
+    @post = Post.find(params[:id])
+    @comments = @post.comments.where(reading_status: false, top_parent_id: nil)
   end
 
   def edit
+    @post = Post.find(params[:id])
   end
   
   def edit_tag
+    @post = Post.find(params[:id])
+    session[:post_params] = post_params
+    redirect_to edit_tag_display_post_path(@post.id)
+  end
+  
+  def edit_tag_display
+    @post = Post.find(params[:id])
+    @tags = Tag.where(is_available: false)
+    @tag = Tag.new
   end
   
   def edit_preview
+    @post = Post.find(params[:id])
+    @editted_post = Post.new(session[:post_params])
+    @tags = Tag.where(id: params[:tag_ids])
+    session[:new_tag_ids] = params[:tag_ids]
   end
   
   def update
+    @post = Post.find(params[:id])
+    @post.update(session[:post_params])
+    @post.taggings.destroy_all
+    @tags = Tag.where(id: session[:new_tag_ids])
+    @tags.each do |tag|
+      tagging = Tagging.new
+      tagging.post_id = @post.id
+      tagging.tag_id = tag.id
+      tagging.save
+    end
+    session.delete(:post_params)
+    session.delete(:new_tag_ids)
+    redirect_to post_path(@post.id)
   end
   
   def destroy
+    @post = Post.find(params[:id])
+    @post.destroy
+    redirect_to user_path(current_user.id)
   end
   
   private

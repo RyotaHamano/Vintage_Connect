@@ -20,8 +20,9 @@ Rails.application.routes.draw do
       end
       
       member do
-        patch 'edit_tag'
-        patch 'edit_preview'
+        post 'edit_tag'
+        get 'edit_tag_display'
+        get 'edit_preview'
       end
       
       resource :favorites, only:[:create, :destroy]

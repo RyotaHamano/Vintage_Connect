@@ -1,2 +1,97 @@
-<h1>Public::Posts#show</h1>
-<p>Find me in app/views/public/posts/show.html.erb</p>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12-col-md-4 col-lg-4">
+      <div>
+        <%= image_tag current_user.get_user_image(100, 100) %>
+        <span><%= current_user.most_favorite %></span>
+        <%= link_to user_path(current_user.id) do %><%= current_user.name %><% end %>
+        <p><%= current_user.introduction%></p>
+        <ul>
+          <li>フォロー数</li>
+          <li>フォロワー数</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-sm-12 col-md-8 col-lg-8">
+      <div class="post_header">
+        <ul>
+          <li><%= @post.shop_genre_i18n %></li>
+          <li><%= @post.prefecture_i18n %></li>
+          <li><i class="fa-regular fa-star"></i><%= @post.rate %></li>
+        </ul>
+        <% if @post.user.id == current_user.id %>
+          <%= link_to '編集する', edit_post_path(@post.id), class:'btn btn-success' %>
+          <%= link_to '削除する', post_path(@post.id), method: :delete, data: { confirm: "削除してよろしいですか？" }, class:'btn btn-danger' %>
+        <% end %>
+      </div>
+      <div class="post_main">
+        <div class="post_main_header">
+          <h3><%= @post.shop_name %></h3>
+          <%= @post.tags.each do |tag| %>
+            <%= form_with url: search_tags_path do |g| %>
+              <%= g.submit "#{tag.name}" class:'btn btn-info' %>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="post_main_image_review">
+          <div class="post_main_image">
+            <%= @post.post_images.each do |image| %>
+              <%= image_tag image.variant(resize: "500x400") %>
+            <% end %>
+          </div>
+          <div class="post_main_review">
+            <%= @post.review %>
+          </div>
+        </div>
+        <% if @post.favorites.exists?(user_id: current_user_id) %>
+          <%= link_to post_favorites_path(@post.id), method: :delete do %><i class="fa-solid fa-heart"></i><% end %><%= @post.favorites.count %>
+        <% else %>
+          <%= link_to post_favorites_path(@post.id), method: :post do %><i class="fa-regular fa-heart"></i><% end %><%= @post.favorites.count %>
+        <% end %>
+      </div>
+      <div class="comment">
+        <% @comments.each do |comment| %>
+          <div class="comment_item">
+            <%= link_to user_path(comment.user.id) do %>
+              <%= image_tag comment.user.get_user_image(60, 60) %>
+              <%= comment.user.name %>
+            <% end %>
+            <%= comment.text %>
+            <% if current_user.id == comment.user.id %>
+              <%= link_to '削除', post_comment_path(@post.id, comment.id), method: :delete, class:'btn btn-danger' %>
+            <% end %>
+            <% comment.replies.each do |reply| %>
+              <div class="reply_item">
+                <%= link_to user_path(reply.user.id) do %>
+                  <%= image_tag reply.user.get_user_image(50,50) %>
+                  <%= reply.user.name %>
+                <% end %>
+                <%= reply.text %>
+                <% if current_user.id == reply.user.id %>
+                  <%= link_to '削除', post_comment_path(@post.id, reply.id), method: :delete, class:'btn btn-danger' %>
+                <% end %>
+              </div>
+            <% end %>
+            <div class="reply_form">
+              <%= form_with model: @reply, url: post_comments_path do |f| %>
+                <%= f.text_field :text %>
+                <%= f.hidden_field :post_id, :value => @post.id %>
+                <%= f.hidden_field :top_parent_id, :value => comment.id %>
+                <%= f.hidden_field :user_id, :value => current_user.id %>
+                <%= f.submit '返信する', class:'btn btn-warning' %>
+              <%end %>
+            </div>
+          </div>
+        <% end %>
+        <div class="new_comment">
+          <%= form_with model: @comment, url:post_comments_path do |form| %>
+            <%= form.text_field :text %>
+            <%= form.hidden_field :post_id, :value => @post.id %>
+            <%= form.hidden_field :user_id, :value => current_user.id %>
+            <%= form.submit 'コメントする', class:'btn btn-warning' %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
