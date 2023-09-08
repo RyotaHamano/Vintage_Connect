@@ -39,7 +39,7 @@ Rails.application.routes.draw do
       resource :relations, only:[:create, :destroy]
     end
     
-    resource :tags, only: [:index, :create] do
+    resources :tags, only: [:index, :create] do
       collection do
         get 'search'
         get 'narrow'

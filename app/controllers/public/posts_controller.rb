@@ -15,6 +15,17 @@ class Public::PostsController < ApplicationController
   end
   
   def search
+    @posts = Post.where(reading_status: false).where("shop_name LIKE?", "%#{params[:shop_name]}%")
+    if params[:sort_rule]
+      @posts = @posts.sort_branch(params[:sort_rule])
+    end
+    if params[:shop_genre]
+      @posts = @posts.where(shop_genre: params[:shop_genre])
+    end
+    if params[:prefecture]
+      @posts = @posts.where(prefecture: params[:prefecture])
+    end
+    @posts = @posts.page(params[:page])
   end
   
   def new
