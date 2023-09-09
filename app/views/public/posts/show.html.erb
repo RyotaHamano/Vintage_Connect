@@ -27,15 +27,15 @@
       <div class="post_main">
         <div class="post_main_header">
           <h3><%= @post.shop_name %></h3>
-          <%= @post.tags.each do |tag| %>
+          <% @post.tags.each do |tag| %>
             <%= form_with url: search_tags_path do |g| %>
-              <%= g.submit "#{tag.name}" class:'btn btn-info' %>
+              <%= g.submit "#{tag.name}", class:'btn btn-info' %>
             <% end %>
           <% end %>
         </div>
         <div class="post_main_image_review">
           <div class="post_main_image">
-            <%= @post.post_images.each do |image| %>
+            <% @post.post_images.each do |image| %>
               <%= image_tag image.variant(resize: "500x400") %>
             <% end %>
           </div>
@@ -43,7 +43,7 @@
             <%= @post.review %>
           </div>
         </div>
-        <% if @post.favorites.exists?(user_id: current_user_id) %>
+        <% if @post.favorites.exists?(user_id: current_user.id) %>
           <%= link_to post_favorites_path(@post.id), method: :delete do %><i class="fa-solid fa-heart"></i><% end %><%= @post.favorites.count %>
         <% else %>
           <%= link_to post_favorites_path(@post.id), method: :post do %><i class="fa-regular fa-heart"></i><% end %><%= @post.favorites.count %>
@@ -73,7 +73,7 @@
               </div>
             <% end %>
             <div class="reply_form">
-              <%= form_with model: @reply, url: post_comments_path do |f| %>
+              <%= form_with model: @reply, url: post_comments_path(@post.id) do |f| %>
                 <%= f.text_field :text %>
                 <%= f.hidden_field :post_id, :value => @post.id %>
                 <%= f.hidden_field :top_parent_id, :value => comment.id %>
@@ -84,7 +84,7 @@
           </div>
         <% end %>
         <div class="new_comment">
-          <%= form_with model: @comment, url:post_comments_path do |form| %>
+          <%= form_with model: @comment, url: post_comments_path(@post.id) do |form| %>
             <%= form.text_field :text %>
             <%= form.hidden_field :post_id, :value => @post.id %>
             <%= form.hidden_field :user_id, :value => current_user.id %>

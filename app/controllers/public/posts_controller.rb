@@ -39,6 +39,18 @@ class Public::PostsController < ApplicationController
   def tag_select
     @post = Post.new(post_params)
     session[:new_post] = @post
+    # 一時ファイルの作成。一時ファイルへのパスをsessionに格納
+    @temp_files = []
+    temp_file_dir = Rails.root.join('tmp', 'uploads') # ディレクトリを調整してください
+    FileUtils.mkdir_p(temp_file_dir) # ディレクトリが存在しない場合に作成
+    params[:post][:post_images].each_with_index do |image, index|
+      temp_file = Tempfile.new("tempfile_#{index}", temp_file_dir)
+      temp_file.binmode
+      temp_file.write(image.read)
+      temp_file.rewind
+      @temp_files << temp_file
+    end
+    session[:temporary_image_pathes] = @temp_files.map(&:path)
     redirect_to tag_select_display_posts_path
   end
   
@@ -46,17 +58,37 @@ class Public::PostsController < ApplicationController
     @post = Post.new(session[:new_post])
     @tags = Tag.where(is_available: false)
     @tag = Tag.new
-    byebug
   end
   
   def preview
     @post = Post.new(session[:new_post])
     @tags = Tag.where(id: params[:tag_ids])
     session[:tag_ids] = params[:tag_ids]
+    # ディスク上のディレクトリから一時ファイルを読み込む
+    @temp_image_pathes = session[:temporary_image_pathes]
+    @temp_image_pathes.each do |image_path|
+      file_data = File.read(image_path)
+      blob = ActiveStorage::Blob.create_after_upload!(
+        io: StringIO.new(file_data),
+        filename: File.basename(image_path),
+        content_type: 'image/jpeg'
+        )
+      @post.post_images.attach(blob)
+    end
   end
   
   def create
     @post = Post.new(session[:new_post])
+    @temp_image_pathes = session[:temporary_image_pathes]
+    @temp_image_pathes.each do |image_path|
+      file = File.open(image_path)
+      blob = ActiveStorage::Blob.create_after_upload!(
+        io: file,
+        filename: File.basename(image_path),
+        content_type: 'image/jpeg'
+        )
+      @post.post_images.attach(blob)
+    end
     @tags = Tag.where(id: session[:tag_ids])
     @post.save
     @tags.each do |tag|
@@ -67,6 +99,7 @@ class Public::PostsController < ApplicationController
     end
     session.delete(:new_post)
     session.delete(:tag_ids)
+    session.delete(:temporary_image_pathes)
     redirect_to post_path(@post.id)
   end
 
