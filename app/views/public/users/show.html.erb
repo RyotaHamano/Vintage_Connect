@@ -1,16 +1,19 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12 col-md-4 col-lg-4">
-      <div class="user_show">
-        <%= image_tag current_user.get_user_image(100, 100) %>
-        <span><%= current_user.most_favorite %></span>
-        <%= link_to user_path(current_user.id) do %><%= current_user.name %><% end %>
-        <p><%= current_user.introduction %></p>
+      <div class="user_show border">
+        <%= image_tag @user.get_user_image(100, 100) %>
+        <span><%= @user.most_favorite %></span>
+        <%= link_to user_path(@user.id) do %><%= @user.name %><% end %>
+        <p><%= @user.introduction %></p>
         <ul>
-          <li>フォロー数</li>
-          <li>フォロワー数</li>
+          <li><%= link_to follow_user_path(@user.id), class:'btn btn-info' do %><%= @user.follow_user.count %>フォロー<% end %></li>
+          <li><%= link_to followed_user_path(@user.id), class:'btn btn-info' do %><%= @user.followed_user.count %>フォロワー<% end %></li>
         </ul>
-        <%= link_to '投稿する', new_post_path, class:'btn btn-info' %>
+        <% if @user.id == current_user.id %>
+          <%= link_to '編集', edit_user_path(@user.id), class:'btn btn-success'%>
+          <%= link_to '投稿する', new_post_path, class:'btn btn-info' %>
+        <% end %>
       </div>
     </div>
     <div class="col-sm-12 col-md-8 col-lg-8">
