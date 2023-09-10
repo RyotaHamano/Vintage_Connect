@@ -20,12 +20,18 @@ class Public::UsersController < ApplicationController
   end
   
   def destroy
+    @user = User.find(params[:id])
+    @user.destroy
+    flash[:notice] = "退会しました"
+    redirect_to root_path
   end
   
   def follows
+    @user = User.find(params[:id])
   end
   
   def followeds
+    @user = User.find(params[:id])
   end
   
   private
