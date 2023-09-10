@@ -30,11 +30,7 @@ class Public::PostsController < ApplicationController
   end
   
   def new
-    if session[:new_post]
-      @post = Post.new(session[:new_post])
-    else
-      @post = Post.new
-    end
+    @post = Post.new
   end
   
   def tag_select
@@ -60,24 +56,23 @@ class Public::PostsController < ApplicationController
     @tags = Tag.where(is_available: false)
     @tag = Tag.new
   end
-  
+   
+  end
   def preview
     @post = Post.new(session[:new_post])
     @tags = Tag.where(id: params[:tag_ids])
     session[:tag_ids] = params[:tag_ids]
     # ディスク上のディレクトリから一時ファイルを読み込む
     @temp_image_pathes = session[:temporary_image_pathes]
+    @tmp_images=[]
     @temp_image_pathes.each do |image_path|
+      # file_data = File.read(image_path)ファイルを消してしまう記述？
       file_data = File.open(image_path, File::RDONLY){|file| file.read}
-      blob = ActiveStorage::Blob.create_after_upload!(
-        io: StringIO.new(file_data),
-        filename: File.basename(image_path),
-        content_type: 'image/jpeg'
-        )
-      @post.post_images.attach(blob)
+      @tmp_images << Base64.strict_encode64(file_data)
     end
+    
   end
-  
+
   def create
     @post = Post.new(session[:new_post])
     @temp_image_pathes = session[:temporary_image_pathes]

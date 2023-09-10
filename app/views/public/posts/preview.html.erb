@@ -17,9 +17,13 @@
         </div>
         <div class="post_main_image_review">
           <div class="post_main_image">
-            <% @post.post_images.each do |post_image| %>
-              <%= image_tag post_image.variant(resize_to_limit: [500, 400]) %>
+            <%# @post.post_images.each do |post_image| %>
+              <%#= image_tag post_image.variant(resize_to_limit: [500, 400]) %>
+            <%# end %>
+            <% @tmp_images.each do |image| %>
+              <img src="data:image/png;base64,<%=image%>">
             <% end %>
+            
           </div>
           <div class="post_main_review">
             <%= @post.review %>
