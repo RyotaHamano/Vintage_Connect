@@ -16,15 +16,15 @@ class Post < ApplicationRecord
   
   enum shop_genre: {old_clothing: 0, old_item: 1, old_tool: 2, old_interior: 3, antique: 4}
   
-  def sort_branch(number)
+  def self.sort_branch(query, number)
     if number == 0
-      self.order(id: :desc)
+      query = query.order("id DESC")
     elsif number == 1
-      self.order(id: :asc)
+      query = query.order("id ASC")
     elsif number == 2
-      self.order(rate: :desc)
+      query = query.order("rate ")
     elsif number == 3
-      self.includes(:favorites).sort{|a,b| b.favorites.size <=> a.favorites.size }
+      query = query.includes(:favorites).sort{|a,b| b.favorites.size <=> a.favorites.size }
     end
   end
   

@@ -5,8 +5,8 @@ class Public::TagsController < ApplicationController
   end
   
   def search
-    selected_tag_ids = params[:tag_ids]
-    @tags = Tag.where(id: selected_tag_ids)
+    session[:tag_ids] = params[:tag_ids]
+    @tags = Tag.where(id: session[:tag_ids])
     tagged_post_ids = Tagging.where(tag_id: selected_tag_ids).pluck(:post_id)
     @posts = Post.where(reading_status: false).where(id: tagged_post_ids)
     if params[:sort_rule]
@@ -19,9 +19,6 @@ class Public::TagsController < ApplicationController
       @posts = @posts.where(prefecture: params[:prefecture])
     end
     @posts = @posts.page(params[:page])
-  end
-  
-  def narrow
   end
   
   def create

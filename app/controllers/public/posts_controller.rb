@@ -2,28 +2,29 @@ class Public::PostsController < ApplicationController
   
   def index
     @posts = Post.where(reading_status: false)
-    if params[:sort_rule]
-      @posts = @posts.sort_branch(params[:sort_rule])
-    end
-    if params[:shop_genre]
+    if params[:shop_genre].present?
       @posts = @posts.where(shop_genre: params[:shop_genre])
     end
-    if params[:prefecture]
+    if params[:prefecture].present?
       @posts = @posts.where(prefecture: params[:prefecture])
+    end
+    if params[:sort_rule].present?
+      Post.sort_branch(@posts, params[:sort_rule])
     end
     @posts = @posts.page(params[:page])
   end
   
   def search
-    @posts = Post.where(reading_status: false).where("shop_name LIKE?", "%#{params[:shop_name]}%")
-    if params[:sort_rule]
-      @posts = @posts.sort_branch(params[:sort_rule])
-    end
-    if params[:shop_genre]
+    session[:shop_name] = params[:shop_name]
+    @posts = Post.where(reading_status: false).where("shop_name LIKE?", "%#{session[:shop_name]}%")
+    if params[:shop_genre].present?
       @posts = @posts.where(shop_genre: params[:shop_genre])
     end
-    if params[:prefecture]
+    if params[:prefecture].present?
       @posts = @posts.where(prefecture: params[:prefecture])
+    end
+    if params[:sort_rule].present?
+      Post.sort_branch(@posts, params[:sort_rule])
     end
     @posts = @posts.page(params[:page])
   end
@@ -67,7 +68,7 @@ class Public::PostsController < ApplicationController
     # ディスク上のディレクトリから一時ファイルを読み込む
     @temp_image_pathes = session[:temporary_image_pathes]
     @temp_image_pathes.each do |image_path|
-      file_data = File.read(image_path)
+      file_data = File.open(image_path, File::RDONLY){|file| file.read}
       blob = ActiveStorage::Blob.create_after_upload!(
         io: StringIO.new(file_data),
         filename: File.basename(image_path),

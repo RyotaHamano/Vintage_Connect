@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12 col-md-9 col-lg-9">
-      <%= form_with url: search_tags_path do |f| %>
+      <%= form_with url: search_tags_path, method: :get do |f| %>
         <div class="form-group">
           <%= f.collection_check_boxes :tag_ids, @tags, :id, :name %>
         </div>

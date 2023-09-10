@@ -42,7 +42,6 @@ Rails.application.routes.draw do
     resources :tags, only: [:index, :create] do
       collection do
         get 'search'
-        get 'narrow'
       end
     end
     
