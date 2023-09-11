@@ -1,0 +1,61 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-8 col-lg-8">
+      <% @posts.each do |post_item| %>
+        <div class="post_item">
+          <div class="post_item_header">
+            <%= post_item.shop_genre_i18n %>
+            <%= post_item.prefecture_i18n %>
+            <%= post_item.created_at.strftime('%Y/%m/%d')%>
+          </div>
+          <div class="post_item_main">
+            <%= link_to admin_post_path(post_item.id) do %>
+              <%= image_tag post_item.post_images[0].variant(resize: "100x100")%>
+              <h3><%= post_item.shop_name %></h3>
+            <% end %>
+            <span><%= post_item.favorites.count %>いいね</span>
+            <% post_item.tags.limit(5).each do |tag| %>
+              <%= form_with url: search_tags_path, method: :get do |f| %>
+                <%=f.hidden_field :tag_ids, :value => tag.id %>
+                <%= f.submit "#{tag.name}" %>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+     <%= paginate @posts%>
+    </div>
+    <div class="col-sm-12 col-md-4 col-lg-4">
+      <div class="sort_narrow">
+        <%= form_with url: admin_posts_path, method: :get do |f| %>
+          <div class="sort">
+            <%= f.select :sort_rule, [["新しい順", 0],["古い順", 1],["評価が高い順", 2],["いいねが多い順", 3]] %>
+          </div>
+          <div class="narrow_reading_status border">
+            <%= f.radio_button :reading_status, "false" %>
+            <%= f.label :reading_status_false, "閲覧可能投稿" %><br>
+            <%= f.radio_button :reading_status, "true" %>
+            <%= f.label :reading_status_true, "閲覧停止済投稿" %>
+          </div>
+          <div class="narrow_shop_genre border">
+            <%= f.radio_button :shop_genre, Post.shop_genres.key(0) %>
+            <%= f.label :shop_genre_old_clothing, Post.shop_genres_i18n[:old_clothing] %><br>
+            <%= f.radio_button :shop_genre, Post.shop_genres.key(1) %>
+            <%= f.label :shop_genre_old_item, Post.shop_genres_i18n[:old_item] %><br>
+            <%= f.radio_button :shop_genre, Post.shop_genres.key(2) %>
+            <%= f.label :shop_genre_old_tool, Post.shop_genres_i18n[:old_tool] %><br>
+            <%= f.radio_button :shop_genre, Post.shop_genres.key(3) %>
+            <%= f.label :shop_genre_old_interior, Post.shop_genres_i18n[:old_interior] %><br>
+            <%= f.radio_button :shop_genre, Post.shop_genres.key(4) %>
+            <%= f.label :shop_genre_antique, Post.shop_genres_i18n[:antique] %><br>
+          </div>
+          <div class="narrow_prefecture border">
+            <%= f.select :prefecture, Post.prefectures_i18n.invert,include_blank: true %>
+          </div>
+          <div class="button">
+            <%= f.submit '適用', class:'btn btn-warning'%>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>

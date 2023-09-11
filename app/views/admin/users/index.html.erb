@@ -1,2 +1,54 @@
-<h1>Admin::Users#index</h1>
-<p>Find me in app/views/admin/users/index.html.erb</p>
+<div class="container">
+  <div class="row">
+    <div class="border">
+      <p>
+      【優良ユーザー】削除投稿数0~3 削除コメント数0~5 削除タグ数0~5<br>
+      【注意ユーザー】削除投稿数4~6 削除コメント数6~10 削除タグ数6~10<br>
+      【要注意ユーザー】削除投稿数7~9 削除コメント数11~15 削除タグ数11~15
+      </p>
+    </div>
+    
+    <div class="col-sm-12 col-md-8 col-lg-8">
+      <% @users.each do |user| %>
+        <div class="user_box border">
+          <div class="user_box_header">
+            <%= link_to user_path(user.id) do %><%= user.name %><% end %>
+            <%= user.most_favorite %>
+          </div>
+          <div class="user_box_main">
+            <%= image_tag user.get_user_image(80,80) %>
+            <p><%= user.introduction %></p>
+            <strong>削除投稿数：<%= user.number_of_deleted_posts.to_s %></strong>
+            <strong>削除コメント数：<%= user.number_of_deleted_comments.to_s %></strong>
+            <strong>削除タグ数：<%= user.number_of_deleted_tags.to_s %></strong>
+          </div>
+        </div>
+      <% end %>
+      <%= paginate @users %>
+    </div>
+    <div class="col-sm-12 col-md-4 col-lg-4">
+      <div class="sort_narrow">
+        <%= form_with url: admin_users_path, method: :get do |f| %>
+          <div class="sort">
+            <%= f.select :sort_rule, [["会員登録（降順）", 0],["会員登録（昇順）", 1],["投稿が多い順", 2],["コメントが多い順", 3],["作成タグが多い順", 4]] %>
+          </div>
+          <div class="narrow_user_status">
+            <%= f.radio_button :user_status, "green" %>
+            <%= f.label :user_status_green, "優良ユーザー" %><br>
+            <%= f.radio_button :user_status, "yellow" %>
+            <%= f.label :user_status_green, "注意ユーザー" %><br>
+            <%= f.radio_button :user_status, "red" %>
+            <%= f.label :user_status_green, "要注意ユーザー" %><br>
+            <%= f.radio_button :user_status, "gray" %>
+            <%= f.label :user_status_green, "削除待ユーザー" %><br>
+            <%= f.radio_button :user_status, "black" %>
+            <%= f.label :user_status_green, "削除済ユーザー" %><br>
+          </div>
+          <div class="button">
+            <%= f.submit '適用', class:'btn btn-warning'%>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

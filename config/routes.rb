@@ -35,6 +35,7 @@ Rails.application.routes.draw do
         get 'confirm'
         get 'follow'
         get 'followed'
+        get 'favorites'
       end
       resource :relations, only:[:create, :destroy]
     end

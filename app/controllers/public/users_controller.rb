@@ -2,7 +2,13 @@ class Public::UsersController < ApplicationController
   
   def show
     @user = User.find(params[:id])
-    @posts = @user.posts.where(reading_status: false)
+    @posts = @user.posts.where(reading_status: false).order(id: :desc).page(params[:page])
+    
+  end
+  
+  def favorites
+    @user = User.find(params[:id])
+    @favorite_posts = @user.favorite_posts.where(reading_status: false).sort{|a, b| b.favorites.ids <=> a.favorites.ids }
   end
 
   def edit

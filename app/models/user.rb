@@ -17,7 +17,7 @@ class User < ApplicationRecord
   has_many :posts, dependent: :destroy
   has_many :tags
   has_many :favorites, dependent: :destroy
-  has_many :favorite_posts, through: :favorites
+  has_many :favorite_posts, through: :favorites, source: :post
   has_many :comments, dependent: :destroy
   
   has_many :follow, class_name: 'Relation', foreign_key: "follow_id", dependent: :destroy
