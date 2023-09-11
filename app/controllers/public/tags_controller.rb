@@ -5,18 +5,27 @@ class Public::TagsController < ApplicationController
   end
   
   def search
-    session[:tag_ids] = params[:tag_ids]
-    @tags = Tag.where(id: session[:tag_ids])
-    tagged_post_ids = Tagging.where(tag_id: selected_tag_ids).pluck(:post_id)
-    @posts = Post.where(reading_status: false).where(id: tagged_post_ids)
-    if params[:sort_rule]
-      @posts = @posts.sort_branch(params[:sort_rule])
+    if params[:tag_ids].present?
+      session[:tag_ids] = params[:tag_ids]
     end
-    if params[:shop_genre]
+    @tags = Tag.where(id: session[:tag_ids])
+    tagged_post_ids = Tagging.where(tag_id: session[:tag_ids]).pluck(:post_id)
+    @posts = Post.where(reading_status: false).where(id: tagged_post_ids)
+    
+    if params[:shop_genre].present?
       @posts = @posts.where(shop_genre: params[:shop_genre])
     end
-    if params[:prefecture]
+    if params[:prefecture].present?
       @posts = @posts.where(prefecture: params[:prefecture])
+    end
+    if params[:sort_rule] == "0"
+      @posts = @posts.order(id: :desc)
+    elsif params[:sort_rule] == "1"
+      @posts = @posts.order(id: :asc)
+    elsif params[:sort_rule] == "2"
+      @posts = @posts.order(rate: :desc)
+    elsif params[:sort_rule] == "3"
+      @posts = @posts.includes(:favorites).sort{|a,b| b.favorites.size <=> a.favorites.size }
     end
     @posts = @posts.page(params[:page])
   end

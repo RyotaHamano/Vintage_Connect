@@ -22,8 +22,8 @@
       <% @posts.each do |post_item| %>
         <div class="post_item">
           <div class="post_item_header">
-            <%= post_item.shop_genre %>
-            <%= post_item.prefecture %>
+            <%= post_item.shop_genre_i18n %>
+            <%= post_item.prefecture_i18n %>
           </div>
           <div class="post_item_main">
             <%= link_to post_path(post_item.id) do %>
@@ -61,7 +61,7 @@
             <%= f.label :shop_genre_antique, Post.shop_genres_i18n[:antique] %><br>
           </div>
           <div class="narrow_prefecture">
-            <%= f.select :prefecture, Post.prefectures_i18n.invert %>
+            <%= f.select :prefecture, Post.prefectures_i18n.invert,include_blank: true %>
           </div>
           <div class="button">
             <%= f.submit '適用', class:'btn btn-warning'%>

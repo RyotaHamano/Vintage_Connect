@@ -8,8 +8,14 @@ class Public::PostsController < ApplicationController
     if params[:prefecture].present?
       @posts = @posts.where(prefecture: params[:prefecture])
     end
-    if params[:sort_rule].present?
-      Post.sort_branch(@posts, params[:sort_rule])
+    if params[:sort_rule] == "0"
+      @posts = @posts.order(id: :desc)
+    elsif params[:sort_rule] == "1"
+      @posts = @posts.order(id: :asc)
+    elsif params[:sort_rule] == "2"
+      @posts = @posts.order(rate: :desc)
+    elsif params[:sort_rule] == "3"
+      @posts = @posts.includes(:favorites).sort{|a,b| b.favorites.size <=> a.favorites.size }
     end
     @posts = @posts.page(params[:page])
   end
@@ -53,11 +59,10 @@ class Public::PostsController < ApplicationController
   
   def tag_select_display
     @post = Post.new(session[:new_post])
-    @tags = Tag.where(is_available: false)
+    @tags = Tag.where(is_available: false).order(:name)
     @tag = Tag.new
   end
    
-  end
   def preview
     @post = Post.new(session[:new_post])
     @tags = Tag.where(id: params[:tag_ids])
@@ -102,6 +107,8 @@ class Public::PostsController < ApplicationController
   def show
     @post = Post.find(params[:id])
     @comments = @post.comments.where(reading_status: false, top_parent_id: nil)
+    @comment = Comment.new
+    @reply = Comment.new
   end
 
   def edit
@@ -116,7 +123,7 @@ class Public::PostsController < ApplicationController
   
   def edit_tag_display
     @post = Post.find(params[:id])
-    @tags = Tag.where(is_available: false)
+    @tags = Tag.where(is_available: false).order(:name)
     @tag = Tag.new
   end
   
