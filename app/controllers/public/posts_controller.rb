@@ -117,7 +117,22 @@ class Public::PostsController < ApplicationController
   
   def edit_tag
     @post = Post.find(params[:id])
-    session[:post_params] = post_params
+    session[:post_params] = edit_post_params
+    # 投稿内の画像を変更する場合
+    if params[:post][:post_images].present?
+      @temp_files = []
+      temp_file_dir = Rails.root.join('tmp', 'uploads') # ディレクトリを調整してください
+      FileUtils.mkdir_p(temp_file_dir) # ディレクトリが存在しない場合に作成
+      params[:post][:post_images].each_with_index do |image, index|
+        temp_file = Tempfile.new("tempfile_#{index}", temp_file_dir)
+        temp_file.binmode
+        temp_file.write(image.read)
+        temp_file.rewind
+        @temp_files << temp_file
+      end
+      session[:temporary_image_pathes] = @temp_files.map(&:path)
+    end
+    
     redirect_to edit_tag_display_post_path(@post.id)
   end
   
@@ -128,15 +143,44 @@ class Public::PostsController < ApplicationController
   end
   
   def edit_preview
+    
     @post = Post.find(params[:id])
     @editted_post = Post.new(session[:post_params])
     @tags = Tag.where(id: params[:tag_ids])
     session[:new_tag_ids] = params[:tag_ids]
+    
+    # 投稿内の画像を変更する場合
+    if session[:temporary_image_pathes].present?
+      @temp_image_pathes = session[:temporary_image_pathes]
+      @tmp_images=[]
+      @temp_image_pathes.each do |image_path|
+        
+        # file_data = File.read(image_path)ファイルを消してしまう記述？
+        file_data = File.open(image_path, File::RDONLY){|file| file.read}
+        @tmp_images << Base64.strict_encode64(file_data)
+      end
+    end
   end
   
   def update
     @post = Post.find(params[:id])
     @post.update(session[:post_params])
+    # 画像の変更を行う場合
+    if session[:temporary_image_pathes].present?
+      @post.post_images.each do |post_image|
+        post_image.purge
+      end
+      @temp_image_pathes = session[:temporary_image_pathes]
+      @temp_image_pathes.each do |image_path|
+        file = File.open(image_path)
+        blob = ActiveStorage::Blob.create_after_upload!(
+          io: file,
+          filename: File.basename(image_path),
+          content_type: 'image/jpeg'
+          )
+        @post.post_images.attach(blob)
+      end
+    end
     @post.taggings.destroy_all
     @tags = Tag.where(id: session[:new_tag_ids])
     @tags.each do |tag|
@@ -147,6 +191,7 @@ class Public::PostsController < ApplicationController
     end
     session.delete(:post_params)
     session.delete(:new_tag_ids)
+    session.delete(:temporary_image_pathes)
     redirect_to post_path(@post.id)
   end
   
@@ -160,6 +205,10 @@ class Public::PostsController < ApplicationController
   
   def post_params
     params.require(:post).permit(:shop_name, :shop_genre, :prefecture, :address, :review, :rate, :reading_status, :user_id, post_images:[])
+  end
+  
+  def edit_post_params
+    params.require(:post).permit(:shop_name, :shop_genre, :prefecture, :address, :review, :rate, :reading_status, :user_id)
   end
   
 end

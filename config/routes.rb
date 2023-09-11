@@ -20,7 +20,7 @@ Rails.application.routes.draw do
       end
       
       member do
-        post 'edit_tag'
+        patch 'edit_tag'
         get 'edit_tag_display'
         get 'edit_preview'
       end

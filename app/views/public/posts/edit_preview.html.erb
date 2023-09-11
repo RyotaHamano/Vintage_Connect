@@ -11,14 +11,20 @@
       <div class="post_main">
         <div class="post_main_header">
           <h3><%= @editted_post.shop_name %></h3>
-          <%= @tags.each do |tag| %>
+          <% @tags.each do |tag| %>
             <%= tag.name %>
           <% end %>
         </div>
         <div class="post_main_image_review">
           <div class="post_main_image">
-            <%= @editted_post.post_images.each do |image| %>
-              <%= image_tag image.variant(resize: "500x400") %>
+            <% if @tmp_images.present? %>
+              <% @tmp_images.each do |image| %>
+                <img src="data:image/png;base64,<%=image%>">
+              <% end %>
+            <% else %>
+              <% @post.post_images.each do |image| %>
+                <%= image_tag image.variant(resize: "500x400")%>
+              <% end %>
             <% end %>
           </div>
           <div class="post_main_review">
