@@ -26,12 +26,12 @@ class Public::UsersController < ApplicationController
     redirect_to root_path
   end
   
-  def follows
+  def follow
     @user = User.find(params[:id])
     @users = @user.follow_user
   end
   
-  def followeds
+  def followed
     @user = User.find(params[:id])
     @users = @user.followed_user
   end

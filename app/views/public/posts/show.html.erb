@@ -1,15 +1,25 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12-col-md-4 col-lg-4">
-      <div>
-        <%= image_tag current_user.get_user_image(100, 100) %>
-        <span><%= current_user.most_favorite %></span>
-        <%= link_to user_path(current_user.id) do %><%= current_user.name %><% end %>
-        <p><%= current_user.introduction%></p>
+      <div class="user_show border">
+        <%= image_tag @post.user.get_user_image(100, 100) %>
+        <span><%= @post.user.most_favorite %></span>
+        <%= link_to user_path(@post.user.id) do %><%= @post.user.name %><% end %>
+        <p><%= @post.user.introduction %></p>
         <ul>
-          <li>フォロー数</li>
-          <li>フォロワー数</li>
+          <li><%= link_to follow_user_path(@post.user.id), class:'btn btn-info' do %><%= @post.user.follow_user.count %>フォロー<% end %></li>
+          <li><%= link_to followed_user_path(@post.user.id), class:'btn btn-info' do %><%= @post.user.followed_user.count %>フォロワー<% end %></li>
         </ul>
+        <% if @post.user.id == current_user.id %>
+          <%= link_to '編集', edit_user_path(@post.user.id), class:'btn btn-success'%>
+          <%= link_to '投稿する', new_post_path, class:'btn btn-info' %>
+        <% else %>
+          <% if current_user.follow?(@post.user) %>
+            <%= link_to 'フォローを外す', user_relations_path(@post.user.id), method: :delete, class:'btn btn-danger'%>
+          <% else %>
+            <%= link_to 'フォローする', user_relations_path(@post.user.id), method: :post, class:'btn btn-primary'%>
+          <% end %>
+        <% end %>
       </div>
     </div>
     <div class="col-sm-12 col-md-8 col-lg-8">
