@@ -3,7 +3,7 @@ class Admin::PostsController < ApplicationController
   def index
     @posts = Post.all
     if params[:reading_status].present?
-      @posts.where(reading_status: params[:reading_status])
+      @posts = @posts.where(reading_status: params[:reading_status])
     end
     if params[:shop_genre].present?
       @posts = @posts.where(shop_genre: params[:shop_genre])
@@ -34,6 +34,7 @@ class Admin::PostsController < ApplicationController
     post_item.reading_status = true
     post_item.save
     user.number_of_deleted_posts += 1
+    user.save
     redirect_to admin_posts_path
   end
   

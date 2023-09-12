@@ -1,25 +1,27 @@
 class Admin::UsersController < ApplicationController
   
   def index
-    @users = User.all
-    if params[:user_status] == "green"
-      @users = User.where("number_of_deleted_posts <= ? AND number_of_deleted_comments <= ? AND number_of_deleted_tags <= ?", 3, 5, 5)
+    @users = User.where(is_admission: false)
+    if params[:user_status] == "all"
+      @users = User.all
+    elsif params[:user_status] == "green"
+      @users = @users.where("number_of_deleted_posts <= ? AND number_of_deleted_comments <= ? AND number_of_deleted_tags <= ?", 3, 5, 5)
     elsif params[:user_status] == "yellow"
-      @users = User.where(
+      @users = @users.where(
         "number_of_deleted_posts >= ? AND number_of_deleted_posts <= ? OR " \
         "number_of_deleted_comments >= ? AND number_of_deleted_comments <= ? OR " \
         "number_of_deleted_tags >= ? AND number_of_deleted_tags <= ?",
         4, 6, 6, 10, 6, 10
         )
     elsif params[:user_status] == "red"
-      @users = User.where(
+      @users = @users.where(
         "number_of_deleted_posts >= ? AND number_of_deleted_posts <= ? OR " \
         "number_of_deleted_comments >= ? AND number_of_deleted_comments <= ? OR " \
         "number_of_deleted_tags >= ? AND number_of_deleted_tags <= ?",
         7, 9, 11, 15, 11, 15
         )
     elsif params[:user_status] == "gray"
-      @users = User.where("number_of_deleted_posts = ? OR number_of_deleted_comments = ? OR number_of_deleted_tags = ?", 10, 16, 16).where(is_admission: false)
+      @users = @users.where("number_of_deleted_posts = ? OR number_of_deleted_comments = ? OR number_of_deleted_tags = ?", 10, 16, 16).where(is_admission: false)
     elsif params[:user_status] == "black"
       @users = User.where(is_admission: true)
     end 
@@ -39,12 +41,35 @@ class Admin::UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-    @posts = @user.posts.all
-    @comments = @user.comments.all
+    @posts = @user.posts.all.order(id: :desc)
+    @comments = @user.comments.where(reading_status: true)
     @tags = @user.tags.all
+    
+    if params[:reading_status] == "0"
+      @posts = @posts.where(reading_status: false)
+    elsif params[:reading_status] == "1"
+      @posts = @posts.where(reading_status: true)
+    end
+    if params[:sort_rule] == "0"
+      @posts = @posts.order(id: :desc)
+    elsif params[:sort_rule] == "1"
+      @posts = @posts.order(id: :asc)
+    end
+    
   end
   
   def withdraw
+    user = User.find(params[:id])
+    posts = user.posts.where(reading_status: false)
+    comments = user.comments.where(reading_status: false)
+    user.update(is_admission: true)
+    posts.each do |post_item|
+      post_item.update(reading_status: true)
+    end
+    comments.each do |comment|
+      comment.update(reading_status: true)
+    end
+    redirect_to admin_user_path(user.id)
   end
   
 end

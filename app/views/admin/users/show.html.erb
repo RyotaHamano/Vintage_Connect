@@ -1,29 +1,27 @@
 <div class="container">
   <div class="row">
-    <div class="col-sm-12 col-md-4 col-lg-4">
+    <div class="col-sm-12 col-md-3 col-lg-3">
       <div class="user_show border">
         <%= image_tag @user.get_user_image(100, 100) %>
         <span><%= @user.most_favorite %></span>
         <%= link_to user_path(@user.id) do %><%= @user.name %><% end %>
         <p><%= @user.introduction %></p>
-        <ul>
-          <li><%= link_to follow_user_path(@user.id), class:'btn btn-info' do %><%= @user.follow_user.count %>フォロー<% end %></li>
-          <li><%= link_to followed_user_path(@user.id), class:'btn btn-info' do %><%= @user.followed_user.count %>フォロワー<% end %></li>
-        </ul>
-        <% if @user.id == current_user.id %>
-          <%= link_to '編集', edit_user_path(@user.id), class:'btn btn-success'%>
-          <%= link_to '投稿する', new_post_path, class:'btn btn-info' %>
-          <%= link_to 'お気に入りした投稿', favorites_user_path(@user.id), class:'btn btn-info'%>
-        <% else %>
-          <% if current_user.follow?(@user) %>
-            <%= link_to 'フォローを外す', user_relations_path(@user.id), method: :delete, class:'btn btn-danger'%>
-          <% else %>
-            <%= link_to 'フォローする', user_relations_path(user.id), method: :post, class:'btn btn-primary'%>
-          <% end %>
+      </div>
+      <div class="deleted_comments">
+        <p>削除済コメント</p>
+        <% @comments.each do |comment| %>
+          <div class="border">
+            <%= link_to admin_post_path(comment.post.id) do %><%= comment.post.shop_name %><% end %>
+            <%= comment.text %>
+            <%= link_to '強制削除', admin_restrict_viewing_comment_path(comment.post.id, comment.id), data: { confirm: "よろしいですか？" }, class:'btn btn-danger'%>
+          </div>
         <% end %>
       </div>
     </div>
-    <div class="col-sm-12 col-md-8 col-lg-8">
+    <div class="col-sm-12 col-md-6 col-lg-6">
+      <strong>削除投稿数：<%= @user.number_of_deleted_posts.to_s %></strong>
+      <strong>削除コメント数：<%= @user.number_of_deleted_comments.to_s %></strong>
+      <strong>削除タグ数：<%= @user.number_of_deleted_tags.to_s %></strong>
       <% @posts.each do |post_item| %>
         <div class="post_item border">
           <div class="post_item_header">
@@ -31,7 +29,7 @@
             <%= post_item.prefecture_i18n %>
           </div>
           <div class="post_item_main">
-            <%= link_to post_path(post_item.id) do %>
+            <%= link_to admin_post_path(post_item.id) do %>
               <%= image_tag post_item.post_images[0].variant(resize: "100x100")%>
               <h3><%= post_item.shop_name %></h3>
             <% end %>
@@ -45,7 +43,42 @@
           </div>
         </div>
       <% end %>
-      <%= paginate @posts %>
+      
+    </div>
+    <div class="col-sm-12 col-md-3 col-lg-3">
+      <% if @user.is_admission == false %>
+        <%= link_to '強制退会', withdraw_admin_user_path(@user.id), method: :patch, data: { confirm: "よろしいですか？" }, class:'btn btn-danger'%>
+      <% else %>
+        <strong>強制退会 済</strong>
+      <% end %>
+      <div class="sort_narrow">
+        <%= form_with url: admin_user_path(@user.id), method: :get do |f| %>
+          <div class="sort">
+            <%= f.select :sort_rule, [["新しい順", 0],["古い順", 1]] %>
+          </div>
+          <div class="narrow_reading_status">
+            <%= f.radio_button :reading_status, "0" %>
+            <%= f.label :user_status_green, "閲覧可能投稿" %><br>
+            <%= f.radio_button :reading_status, "1" %>
+            <%= f.label :user_status_green, "閲覧不可投稿" %><br>
+          </div>
+          <div class="button">
+            <%= f.submit '適用', class:'btn btn-warning'%>
+          </div>
+        <% end %>
+      </div>
+      <div class="tags">
+        <div class="able">
+          <% @tags.each do |tag| %>
+            <%= link_to "#{tag.name}", disable_admin_tag_path(tag.id), metho: :patch, data: { confirm: "よろしいですか？" }, class:'btn btn-danger' %>
+          <% end %>
+        </div>
+        <div class="disabled">
+          <% @tags.each do |tag| %>
+            <%= link_to "#{tag.name}", disable_admin_tag_path(tag.id), metho: :patch, data: { confirm: "よろしいですか？" }, class:'btn btn-danger' %>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
 </div>
