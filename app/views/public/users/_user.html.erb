@@ -1,0 +1,36 @@
+<div class="user_show border border-secondary border-2 py-2 px-2">
+  <div class="user_top d-flex align_items_stretch">
+    <div class="d-flex align-items-center"><%= image_tag user.get_user_image(100,100) %></div>
+    <div class="user_name_favorite flex-fill text-center">
+      <ul class="list-group ">
+        <li class="list-group-item"><strong>BEST ITEM</strong><br><%= user.most_favorite %></li>
+        <%= link_to user_path(user.id) do %>
+          <li class="list-group-item list-group-item-action"><strong>名前</strong><br><%= user.name %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <strong>自己紹介</strong><br>
+      <%= user.introduction %>
+    </li>
+    <li class="list-group-item text-center">
+      <%= link_to follow_user_path(user.id), class:'btn btn-dark my-2' do %><%= user.follow_user.count %>フォロー<% end %>
+      <%= link_to followed_user_path(user.id), class:'btn btn-dark my-2' do %><%= user.followed_user.count %>フォロワー<% end %>
+    </li>
+  </ul>
+  <div class="text-center">
+    <% if user.id == current_user.id %>
+      <%= link_to '編集', edit_user_path(user.id), class:'btn btn-success my-2'%>
+      <%= link_to '投稿する', new_post_path, class:'btn btn-info my-2' %>
+      <%= link_to 'お気に入りした投稿', favorites_user_path(user.id), class:'btn btn-info my-2'%>
+    <% else %>
+      <% if current_user.follow?(user) %>
+        <%= link_to 'フォローを外す', user_relations_path(user.id), method: :delete, class:'btn btn-danger'%>
+      <% else %>
+        <%= link_to 'フォローする', user_relations_path(user.id), method: :post, class:'btn btn-primary'%>
+      <% end %>
+    <% end %>
+  </div>
+</div>

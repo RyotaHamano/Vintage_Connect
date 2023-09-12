@@ -6,12 +6,12 @@ class User < ApplicationRecord
          
   has_one_attached :user_image
   
-  def get_user_image(width, height)
+  def get_user_image(width,height)
     unless user_image.attached?
       file_path = Rails.root.join('app/assets/images/sample.jpg')
       user_image.attach(io: File.open(file_path), filename: 'default-image.jpg', content_type: 'image/jpeg')
     end
-    user_image.variant(resize_to_limit: [width, height]).processed
+    user_image.variant(resize_to_limit: [width,height]).processed
   end
   
   has_many :posts, dependent: :destroy

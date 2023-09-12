@@ -1,22 +1,18 @@
 <div class="container">
-  <div class="search_form">
-    <%= form_with url: search_posts_path, method: :get do |f| %>
-      <%= f.text_field :shop_name %>
-      <%= f.submit '検索', class:'btn btn-success'%>
-    <% end %>
-    <%= link_to 'タグ一覧から探す', tags_path, class:'btn btn-success' %>
+  <div class="search_form mt-2 px-2 my-2 border border-secondary border-3 d-flex">
+      <div class="form-group text-right flex-grow-1 mt-2 mx-2">
+        <%= form_with url: search_posts_path, method: :get do |f| %>
+        <%= f.text_field :shop_name, placeholder: '店名検索', class:'form-control' %>
+        <%= f.submit '検索', class:'btn btn-success '%>
+        <% end %>
+      </div>
+    <div class="mt-2">
+      <%= link_to 'タグ一覧から探す', tags_path, class:'btn btn-success' %>
+    </div>
   </div>
   <div class="row">
-    <div class="col-sm-12 col-md-3 col-lg-3 border">
-      <%= image_tag current_user.get_user_image(100, 100) %>
-      <span><%= current_user.most_favorite %></span>
-      <%= link_to user_path(current_user.id) do %><%= current_user.name %><% end %>
-      <p><%= current_user.introduction%></p>
-      <ul>
-        <li>フォロー数</li>
-        <li>フォロワー数</li>
-      </ul>
-      <%= link_to '投稿する', new_post_path, class:'btn btn-info' %>
+    <div class="col-sm-12 col-md-3 col-lg-3">
+      <%= render 'public/users/user', user: current_user %>
     </div>
     <div class="col-sm-12 col-md-6 col-lg-6">
       <% @posts.each do |post_item| %>
