@@ -7,8 +7,8 @@
     <%= csp_meta_tag %>
     <script src="https://kit.fontawesome.com/6ec8da1d60.js" crossorigin="anonymous"></script>
     <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
@@ -18,6 +18,7 @@
           <div class="logo">
              <h1 class="text-light">Vintage Connect</h1>
           </div>
+          <p class="text-center"><%= flash[:notice] %></p>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -42,7 +43,6 @@
         </div>
       </nav>
     </header>
-    <p><%= flash[:notice] %></p>
     <%= yield %>
     <footer>
       
