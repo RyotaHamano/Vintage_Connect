@@ -1,2 +1,33 @@
-<h1>Admin::Tags#index</h1>
-<p>Find me in app/views/admin/tags/index.html.erb</p>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12 mx-auto">
+      <div class="new_tag">
+        <%= form_with model: @tag, url: admin_tags_path do |f| %>
+          <div class="form-group">
+            <%= f.text_field :name, placeholder: '新規タグ名'%>
+            <%= f.hidden_field :is_available, :value => false %>
+            <%= f.submit '作成', class:'btn btn-success' %>
+          </div>
+        <% end %>
+      </div>
+      <div class="sort_tags">
+        <%= form_with url: admin_tags_path, method: :get do |form| %>
+          <%= form.select :sort_rule, [["新しい順", 0],["名前順", 1]] %>
+          <%= form.submit '適用', class:'btn btn-warning'%>
+        <% end %>
+      </div>
+      <div class="tags">
+        <h3>使用可能タグ</h3>
+        <% @tags.each do |tag| %>
+          <%= link_to "#{tag.name}", disable_admin_tag_path(tag.id), method: :patch, data: { confirm: "使用不可にします" }, class:'btn btn-danger' %>
+        <% end %>
+      </div>
+      <div class="disabled_tags">
+        <h3>使用停止タグ</h3>
+        <% @disabled_tags.each do |disabled_tag| %>
+          <%= link_to "#{disabled_tag.name}", admin_user_path(disabled_tag.user.id), class:'btn btn-info'%>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -43,8 +43,8 @@ class Admin::UsersController < ApplicationController
     @user = User.find(params[:id])
     @posts = @user.posts.all.order(id: :desc)
     @comments = @user.comments.where(reading_status: true)
-    @tags = @user.tags.all
-    
+    @tags = @user.tags.where(is_available: false)
+    @disabled_tags = @user.tags.where(is_available: true)
     if params[:reading_status] == "0"
       @posts = @posts.where(reading_status: false)
     elsif params[:reading_status] == "1"

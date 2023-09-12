@@ -70,12 +70,12 @@
       <div class="tags">
         <div class="able">
           <% @tags.each do |tag| %>
-            <%= link_to "#{tag.name}", disable_admin_tag_path(tag.id), metho: :patch, data: { confirm: "よろしいですか？" }, class:'btn btn-danger' %>
+            <%= link_to "#{tag.name}", disable_admin_tag_path(tag.id), metho: :patch, data: { confirm: "使用不可にします" }, class:'btn btn-danger' %>
           <% end %>
         </div>
         <div class="disabled">
-          <% @tags.each do |tag| %>
-            <%= link_to "#{tag.name}", disable_admin_tag_path(tag.id), metho: :patch, data: { confirm: "よろしいですか？" }, class:'btn btn-danger' %>
+          <% @disabled_tags.each do |tag| %>
+            <%= tag.name %>
           <% end %>
         </div>
       </div>
