@@ -1,101 +1,131 @@
 <div class="container">
   <div class="row">
-    <div class="col-sm-12-col-md-4 col-lg-4">
-      <div class="user_show border">
-        <%= image_tag @post.user.get_user_image(100, 100) %>
-        <span><%= @post.user.most_favorite %></span>
-        <%= link_to user_path(@post.user.id) do %><%= @post.user.name %><% end %>
-        <p><%= @post.user.introduction %></p>
-        <ul>
-          <li><%= link_to follow_user_path(@post.user.id), class:'btn btn-info' do %><%= @post.user.follow_user.count %>フォロー<% end %></li>
-          <li><%= link_to followed_user_path(@post.user.id), class:'btn btn-info' do %><%= @post.user.followed_user.count %>フォロワー<% end %></li>
-        </ul>
-        <% if @post.user.id == current_user.id %>
-          <%= link_to '編集', edit_user_path(@post.user.id), class:'btn btn-success'%>
-          <%= link_to '投稿する', new_post_path, class:'btn btn-info' %>
-        <% else %>
-          <% if current_user.follow?(@post.user) %>
-            <%= link_to 'フォローを外す', user_relations_path(@post.user.id), method: :delete, class:'btn btn-danger'%>
-          <% else %>
-            <%= link_to 'フォローする', user_relations_path(@post.user.id), method: :post, class:'btn btn-primary'%>
-          <% end %>
-        <% end %>
-      </div>
-    </div>
-    <div class="col-sm-12 col-md-8 col-lg-8">
-      <div class="post_header">
-        <ul>
-          <li><%= @post.shop_genre_i18n %></li>
-          <li><%= @post.prefecture_i18n %></li>
-          <li><i class="fa-regular fa-star"></i><%= @post.rate %></li>
-        </ul>
-        <% if @post.user.id == current_user.id %>
-          <%= link_to '編集する', edit_post_path(@post.id), class:'btn btn-success' %>
-          <%= link_to '削除する', post_path(@post.id), method: :delete, data: { confirm: "削除してよろしいですか？" }, class:'btn btn-danger' %>
-        <% end %>
-      </div>
-      <div class="post_main">
-        <div class="post_main_header">
-          <h3><%= @post.shop_name %></h3>
-          <% @post.tags.each do |tag| %>
-            <%= form_with url: search_tags_path do |g| %>
-              <%= g.submit "#{tag.name}", class:'btn btn-info' %>
-            <% end %>
-          <% end %>
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      <div class="mx-auto my-2 border border-secondary border-3">
+        <div class="post_header py-3 bg-dark text-white d-flex">
+          <div class="shop_genre border border-light ml-2 px-2"><%= @post.shop_genre_i18n %></div>
+          <div class="prefecture border border-light mx-2 px-2"><%= @post.prefecture_i18n %></div>
+          <div class="rate border border-light text-warning px-2"><i class="fa-regular fa-star"></i><%= @post.rate %></div>
         </div>
-        <div class="post_main_image_review">
-          <div class="post_main_image">
-            <% @post.post_images.each do |image| %>
-              <%= image_tag image.variant(resize: "500x400") %>
-            <% end %>
-          </div>
-          <div class="post_main_review">
-            <%= @post.review %>
-          </div>
-        </div>
-        <% if @post.favorites.exists?(user_id: current_user.id) %>
-          <%= link_to post_favorites_path(@post.id), method: :delete do %><i class="fa-solid fa-heart"></i><% end %><%= @post.favorites.count %>
-        <% else %>
-          <%= link_to post_favorites_path(@post.id), method: :post do %><i class="fa-regular fa-heart"></i><% end %><%= @post.favorites.count %>
-        <% end %>
-      </div>
-      <div class="comment">
-        <% @comments.each do |comment| %>
-          <div class="comment_item">
-            <%= link_to user_path(comment.user.id) do %>
-              <%= image_tag comment.user.get_user_image(60, 60) %>
-              <%= comment.user.name %>
-            <% end %>
-            <%= comment.text %>
-            <% if current_user.id == comment.user.id %>
-              <%= link_to '削除', post_comment_path(@post.id, comment.id), method: :delete, class:'btn btn-danger' %>
-            <% end %>
-            <% comment.replies.each do |reply| %>
-              <div class="reply_item">
-                <%= link_to user_path(reply.user.id) do %>
-                  <%= image_tag reply.user.get_user_image(50,50) %>
-                  <%= reply.user.name %>
-                <% end %>
-                <%= reply.text %>
-                <% if current_user.id == reply.user.id %>
-                  <%= link_to '削除', post_comment_path(@post.id, reply.id), method: :delete, class:'btn btn-danger' %>
-                <% end %>
-              </div>
-            <% end %>
-            <div class="reply_form">
-              <%= form_with model: @reply, url: post_comments_path(@post.id) do |f| %>
-                <%= f.text_field :text %>
-                <%= f.hidden_field :post_id, :value => @post.id %>
-                <%= f.hidden_field :top_parent_id, :value => comment.id %>
-                <%= f.hidden_field :user_id, :value => current_user.id %>
-                <%= f.submit '返信する', class:'btn btn-warning' %>
-              <%end %>
+        <div class="post_main">
+          <div class="post_main_header d-flex justify-content-between my-2">
+            <h1 class="w-100 align-items-center mx-2 me-auto"><strong class="align-middle">店名：<%= @post.shop_name %></strong></h1>
+            <div class="flex-shrink-1 d-flex flex-wrap align-items-center mr-1">
+              <% @post.tags.each do |tag| %>
+                <div class="text-light mx-1">
+                  <%= form_with url:search_tags_path, method: :get do |f| %>
+                    <%= f.hidden_field :tag_ids, :value => tag.id %>
+                    <%= f.submit "#{tag.name}", class:'btn btn-info mb-1'%>
+                  <% end %>
+                </div>
+              <% end %>
             </div>
           </div>
+          <div class="post_main_image_review row">
+            <div class="post_main_image col-sm-12 col-md-8 col-lg-8">
+              <div class="swiper">
+                <div class="ml-3 swiper-wrapper">
+                  <% @post.post_images.each do |post_image| %>
+                    <div class="swiper-slide">
+                      <%= image_tag post_image, class:'img-fluid' %>
+                    </div>
+                  <% end %>
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+              </div>
+              <div class="text-warning text-right">
+                <% if current_user.favorites.exists?(post_id: @post.id) %>
+                  <%= link_to post_favorites_path(@post.id), method: :delete do %><i class="fa-solid fa-heart"></i><% end %>
+                <% else %>
+                  <%= link_to post_favorites_path(@post.id), method: :post do %><i class="fa-regular fa-heart"></i><% end %>
+                <% end %>
+              </div>
+            </div>
+            <div class="post_main_review col-sm-12 col-md-4 col-lg-4 text-left">
+              <div class="address mb-2 px-1">
+                <strong>住所：<%= @post.address %></strong>
+              </div>
+              <div class="review px-1">
+                <%= safe_join(@post.review.split("\n"),tag(:br)) %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="user_show border border-secondary border-2 py-2 px-2">
+        <div class="user_top d-flex align_items_stretch">
+          <div class="align-items-center">
+            <%= image_tag @user.get_user_image(100,100) %>
+          </div>
+          <div class="user_name_favorite flex-fill text-center">
+            <ul class="list-group ">
+              <%= link_to user_path(@user.id) do %>
+                <li class="list-group-item list-group-item-action">
+                  <strong>名前　</strong><%= @user.name %>
+                  <strong>　自己紹介　</strong>
+                  <%= @user.introduction %>
+                </li>
+              <% end %>
+              <% if @user.id == current_user.id && current_user.follow?(@user) %>
+                <%= link_to 'フォローを外す', user_relations_path(@user.id), method: :delete, class:'btn btn-danger'%>
+              <% else %>
+                <%= link_to 'フォローする', user_relations_path(@user.id), method: :post, class:'btn btn-primary'%>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="comments my-2">
+        <% @comments.each do |comment| %>
+          <div class="comment_item border border-secondary d-flex">
+            <div class="image"><%= image_tag comment.user.get_user_image(60, 60) %></div>
+            <div class="comment_body">
+              <%= link_to user_path(comment.user.id) do %>
+                <%= comment.user.name %><br>
+              <% end %>
+              <%= comment.text %>
+            </div>
+            <div class="align-items-center ms-auto">
+              <% if current_user.id == comment.user.id %>
+                <%= link_to '削除', post_comment_path(@post.id, comment.id), method: :delete, class:'btn btn-danger' %>
+              <% end %>
+            </div>
+          </div>
+          <div class="replies">
+            <% comment.replies.each do |reply| %>
+              <div class="reply_item ml-5 border d-flex">
+                <div class="image">
+                  <%= image_tag reply.user.get_user_image(50,50) %>
+                </div>
+                <div class="reply_body">
+                  <%= link_to user_path(reply.user.id) do %>
+                    <%= reply.user.name %>
+                  <% end %>
+                  <%= reply.text %>
+                </div>
+                <div class="align-items-center">
+                  <% if current_user.id == reply.user.id %>
+                    <%= link_to '削除', post_comment_path(@post.id, reply.id), method: :delete, class:'btn btn-danger' %>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          <div class="reply_form form-group ml-5">
+            <%= form_with model: @reply, url: post_comments_path(@post.id), class:'d-flex' do |f| %>
+              <%= f.text_field :text, class:'form-control ' %>
+              <%= f.hidden_field :post_id, :value => @post.id %>
+              <%= f.hidden_field :top_parent_id, :value => comment.id %>
+              <%= f.hidden_field :user_id, :value => current_user.id %>
+              <%= f.submit '返信する', class:'btn btn-warning' %>
+            <%end %>
+          </div>
         <% end %>
-        <div class="new_comment">
-          <%= form_with model: @comment, url: post_comments_path(@post.id) do |form| %>
-            <%= form.text_field :text %>
+        <div class="new_comment form-group">
+          <%= form_with model: @comment, url: post_comments_path(@post.id), class:'d-flex' do |form| %>
+            <%= form.text_field :text, class:'form-control' %>
             <%= form.hidden_field :post_id, :value => @post.id %>
             <%= form.hidden_field :user_id, :value => current_user.id %>
             <%= form.submit 'コメントする', class:'btn btn-warning' %>

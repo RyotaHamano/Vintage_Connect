@@ -16,11 +16,12 @@
     </div>
     <div class="col-sm-12 col-md-6 col-lg-6">
       <% @posts.each do |post_item| %>
-        <div class="post_item">
-          <div class="post_item_header">
-            <%= post_item.shop_genre_i18n %>
-            <%= post_item.prefecture_i18n %>
-            <%= post_item.created_at.strftime('%Y/%m/%d')%>
+        <div class="post_item border border-secondary border-3">
+          <div class="post_item_header bg-dark text-white d-flex py-2">
+            <div class="border border-light ml-2 px-2"><%= post_item.shop_genre_i18n %></div>
+            <div class="border border-light ml-2 px-2"><%= post_item.prefecture_i18n %></div>
+            <div class="border border-light ml-2 px-2 text-warning"><i class="fa-regular fa-star"></i><%= post_item.rate %></div>
+            <div class="border border-light ml-2 px-2"><%= post_item.created_at.strftime('%Y/%m/%d')%></div>
           </div>
           <div class="post_item_main">
             <%= link_to post_path(post_item.id) do %>
@@ -40,12 +41,14 @@
      <%= paginate @posts%>
     </div>
     <div class="col-sm-12 col-md-3 col-lg-3">
-      <div class="sort_narrow">
+      <div class="sort_narrow border border-secondary border-3">
+        <div class="text-center bg-dark text-white py-2">絞り込み・並び替え</div>
         <%= form_with url: posts_path, method: :get do |f| %>
-          <div class="sort">
-            <%= f.select :sort_rule, [["新しい順", 0],["古い順", 1],["評価が高い順", 2],["いいねが多い順", 3]] %>
+          <div class="sort px-2 pt-2">
+            <%= f.label :sort_rule, '並び替え：'%>
+            <%= f.select :sort_rule, [["新しい順", 0],["古い順", 1],["評価が高い順", 2],["いいねが多い順", 3]], class:'form-control'%>
           </div>
-          <div class="narrow_shop_genre">
+          <div class="narrow_shop_genre px-4">
             <%= f.radio_button :shop_genre, Post.shop_genres.key(0) %>
             <%= f.label :shop_genre_old_clothing, Post.shop_genres_i18n[:old_clothing] %><br>
             <%= f.radio_button :shop_genre, Post.shop_genres.key(1) %>
@@ -57,11 +60,12 @@
             <%= f.radio_button :shop_genre, Post.shop_genres.key(4) %>
             <%= f.label :shop_genre_antique, Post.shop_genres_i18n[:antique] %><br>
           </div>
-          <div class="narrow_prefecture">
+          <div class="narrow_prefecture px-2 ">
+            <%= f.label :prefecture, '都道府県：'%> 
             <%= f.select :prefecture, Post.prefectures_i18n.invert,include_blank: true %>
           </div>
-          <div class="button">
-            <%= f.submit '適用', class:'btn btn-warning'%>
+          <div class="button px-2 pb-2 text-center">
+            <%= f.submit '適用', class:'btn btn-warning px-5'%>
           </div>
         <% end %>
       </div>

@@ -12,6 +12,7 @@ import "jquery";
 import "popper.js";
 import "bootstrap";
 import "../stylesheets/application"; 
+import "application.js"
 import Swiper from 'swiper/swiper-bundle.js';  //この行を追記
 import 'swiper/swiper-bundle.css';　　　　　　　　　　　　　　　　　　　　　　　　　　//この行を追記
 
