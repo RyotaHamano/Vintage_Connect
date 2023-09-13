@@ -2,31 +2,9 @@
   <div class="row">
     <div class="col-sm-12 col-md-4 col-lg-4 my-2">
       <%= render 'public/users/user', user: @user %>
-      </div>
     </div>
-    <div class="col-sm-12 col-md-8 col-lg-8">
-      <% @posts.each do |post_item| %>
-        <div class="post_item border">
-          <div class="post_item_header">
-            <%= post_item.shop_genre_i18n %>
-            <%= post_item.prefecture_i18n %>
-          </div>
-          <div class="post_item_main">
-            <%= link_to post_path(post_item.id) do %>
-              <%= image_tag post_item.post_images[0].variant(resize: "100x100")%>
-              <h3><%= post_item.shop_name %></h3>
-            <% end %>
-            <span><%= post_item.favorites.count %>いいね</span>
-            <% post_item.tags.limit(5).each do |tag| %>
-              <%= form_with url: search_tags_path, method: :get do |f| %>
-                <%=f.hidden_field :tag_id, :value => tag.id %>
-                <%= f.submit "#{tag.name}" %>
-              <% end %>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-      <%= paginate @posts %>
+    <div class="col-sm-12 col-md-8 col-lg-8 my-2">
+      <%= render 'public/posts/item', posts: @posts %>
     </div>
   </div>
 </div>

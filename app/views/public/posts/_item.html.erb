@@ -11,16 +11,16 @@
         <%= image_tag post_item.post_images[0].variant(resize: "100x100")%><br>
         <span><%= post_item.favorites.count %>いいね</span>
       </div>
-      <div class="shop_name_favorite_tags">
+      <div class="shop_name_favorite_tags ml-2">
         <%= link_to post_path(post_item.id) do %>
           <h2><%= post_item.shop_name %></h2>
         <% end %>
         
-        <div class="tags d-flex">
+        <div class="tags d-flex flex-wrap">
           <% post_item.tags.limit(5).each do |tag| %>
             <%= form_with url: search_tags_path, method: :get do |f| %>
               <%=f.hidden_field :tag_ids, :value => tag.id %>
-              <%= f.submit "#{tag.name}", class:'btn btn-info' %>
+              <%= f.submit "#{tag.name}", class:'btn btn-info mx-1 mb-1' %>
             <% end %>
           <% end %>
         </div>
