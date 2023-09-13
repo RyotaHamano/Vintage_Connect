@@ -1,32 +1,39 @@
 <div class="container">
-  <div class="row mx-auto">
-    <p>10個まで選択可能です</p>
-    <%= form_with url: edit_preview_post_path(@post.id), method: :get do |f| %>
-    <div class="col-sm-12 col-md-8 col-lg-8">
-      <div class="form-group">
-        <p>新規タグ選択</p>
-        <%= f.collection_check_boxes :tag_ids, @tags, :id, :name %>
-      </div>
+  <div class="row text-center">
+    <div class="col-sm-12 col-md-9 col-lg-9 mx-auto mt-2 pt-2 border border-secondary border-3">
+      <p><strong>10個まで選択可能です</strong></p>
+      <%= form_with url: edit_preview_post_path(@post.id), method: :get do |f| %>
+        <div class="form-group d-flex flex-wrap">
+          <%= f.collection_check_boxes :tag_ids, @tags, :id, :name, class:'form-control' do |b| %>
+              <div class="flex-fill border border-secondary px-1 pt-1">
+                <%= b.label { b.check_box + b.text }%>
+              </div>
+          <% end %>
+        </div>
+        <div class="form-group text-right">
+          <%= f.submit 'プレビューに進む', class:'btn btn-info'%>
+        </div>
+      <% end %>
     </div>
-    <div class="col-sm-12 col-md-4 col-lg-4">
-      <div class="create_tag">
-        <% form_with model:@tag, url: tags_path do |form| %>
+    <div class="col-sm-12 col-md-3 col-lg-3">
+      <div class="current_tags_selected my-2 border border-secondary">
+        <p class="text-center"><strong>現在紐づけられているタグ</strong></p>
+        <div class="d-flex flex-wrap align-items-center">
+          <% @selected_tags.each do |tag| %>
+            <div class="text-light bg-info border border-light rounded px-2 my-2">
+              <%= tag.name %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="create_tag mt-2">
+        <%= form_with model:@tag, url: tags_path do |form| %>
           <%= form.text_field :name, placeholder: "新規タグ名" %>
           <%= form.hidden_field :user_id, :value => current_user.id %>
           <%= form.hidden_field :is_available, :value => false %>
           <%= form.submit 'タグを作成', class:'btn btn-info' %>
         <% end %>
       </div>
-      <div class="selected_tags">
-        <p>現在のタグ</p>
-        <% @post.tags.each do |tag| %>
-          <%= tag.name %>
-        <% end %>
-      </div>
-      <div class="form-group">
-        <%= f.submit 'プレビューに進む'%>
-      </div>
     </div>
-    <% end %>
   </div>
 </div>

@@ -17,7 +17,7 @@ class Public::PostsController < ApplicationController
     elsif params[:sort_rule] == "3"
       @posts = @posts.includes(:favorites).sort{|a,b| b.favorites.size <=> a.favorites.size }
     end
-    @posts = @posts.page(params[:page])
+    
   end
   
   def search
@@ -133,12 +133,12 @@ class Public::PostsController < ApplicationController
       end
       session[:temporary_image_pathes] = @temp_files.map(&:path)
     end
-    
     redirect_to edit_tag_display_post_path(@post.id)
   end
   
   def edit_tag_display
     @post = Post.find(params[:id])
+    @selected_tags = @post.tags.all
     @tags = Tag.where(is_available: false).order(:name)
     @tag = Tag.new
   end
@@ -147,9 +147,12 @@ class Public::PostsController < ApplicationController
     
     @post = Post.find(params[:id])
     @editted_post = Post.new(session[:post_params])
-    @tags = Tag.where(id: params[:tag_ids])
-    session[:new_tag_ids] = params[:tag_ids]
-    
+    if params[:tag_ids].present?
+      @tags = Tag.where(id: params[:tag_ids])
+      session[:new_tag_ids] = params[:tag_ids]
+    else
+      @tags = @post.tags.all
+    end
     # 投稿内の画像を変更する場合
     if session[:temporary_image_pathes].present?
       @temp_image_pathes = session[:temporary_image_pathes]
@@ -182,13 +185,15 @@ class Public::PostsController < ApplicationController
         @post.post_images.attach(blob)
       end
     end
-    @post.taggings.destroy_all
-    @tags = Tag.where(id: session[:new_tag_ids])
-    @tags.each do |tag|
-      tagging = Tagging.new
-      tagging.post_id = @post.id
-      tagging.tag_id = tag.id
-      tagging.save
+    if session[:tag_ids].present?
+      @post.taggings.destroy_all
+      @tags = Tag.where(id: session[:new_tag_ids])
+      @tags.each do |tag|
+        tagging = Tagging.new
+        tagging.post_id = @post.id
+        tagging.tag_id = tag.id
+        tagging.save
+      end
     end
     session.delete(:post_params)
     session.delete(:new_tag_ids)

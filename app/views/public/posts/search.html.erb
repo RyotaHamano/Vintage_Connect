@@ -1,54 +1,31 @@
 <div class="container">
-  <div class="search_form">
-    <%= form_with url: search_posts_path do |f| %>
-      <%= f.text_field :shop_name %>
-      <%= f.submit '検索', class:'btn btn-success'%>
-    <% end %>
-    <%= link_to 'タグ一覧から探す', tags_path, class:'btn btn-success' %>
+  <div class="search_form mt-2 px-2 my-2 border border-secondary border-3 d-flex">
+    <div class="form-group text-right flex-grow-1 mt-2 mx-2">
+      <%= form_with url: search_posts_path, method: :get do |f| %>
+      <%= f.text_field :shop_name, placeholder: '店名検索', class:'form-control' %>
+      <%= f.submit '検索', class:'btn btn-success '%>
+      <% end %>
+    </div>
+    <div class="mt-2">
+      <%= link_to 'タグ一覧から探す', tags_path, class:'btn btn-success' %>
+    </div>
   </div>
   <div class="row">
     <div class="col-sm-12 col-md-3 col-lg-3 border">
-      <%= image_tag current_user.get_user_image(100, 100) %>
-      <span><%= current_user.most_favorite %></span>
-      <%= link_to user_path(current_user.id) do %><%= current_user.name %><% end %>
-      <p><%= current_user.introduction%></p>
-      <ul>
-        <li>フォロー数</li>
-        <li>フォロワー数</li>
-      </ul>
+      <%= render 'public/users/user', user: current_user%>
     </div>
     <div class="col-sm-12 col-md-6 col-lg-6">
-      <% @posts.each do |post_item| %>
-        <div class="post_item">
-          <div class="post_item_header">
-            <%= post_item.shop_genre_i18n %>
-            <%= post_item.prefecture_i18n %>
-          </div>
-          <div class="post_item_main">
-            <%= link_to post_path(post_item.id) do %>
-              <%= image_tag post_item.post_images[0].variant(resize:'120x100') %>
-              <h3><%= post_item.shop_name %></h3>
-            <% end %>
-            <span><%= post_item.favorites.count %>いいね</span>
-            <% post_item.tags.limit(5).each do |tag| %>
-              <%= form_with url: search_tags_path, method: :get do |f| %>
-                <%=f.hidden_field :tag_ids, :value => tag.id %>
-                <%= f.submit "#{tag.name}" %>
-              <% end %>
-            <% end %>
-          </div>
-        </div>
-      <% end %>
-      <%= paginate @posts %>
+      <%= render 'public/posts/item', posts: @posts %>
     </div>
     <div class="col-sm-12 col-md-3 col-lg-3">
-      <div class="sort_narrow">
+      <div class="sort_narrow border border-secondary border-3">
+        <div class="text-center bg-dark text-white py-2">絞り込み・並び替え</div>
         <%= form_with url: search_posts_path, method: :get do |f| %>
-          <div class="sort">
-            <%= f.hidden_field :shop_name, :value => session[:shop_name] %>
-            <%= f.select :sort_rule, [["新しい順", 0],["古い順", 1],["評価が高い順", 2],["いいねが多い順", 3]],{selected: 0} %>
+          <div class="sort px-2 pt-2">
+            <%= f.label :sort_rule, '並び替え：'%>
+            <%= f.select :sort_rule, [["新しい順", 0],["古い順", 1],["評価が高い順", 2],["いいねが多い順", 3]], class:'form-control'%>
           </div>
-          <div class="narrow_shop_genre">
+          <div class="narrow_shop_genre px-4">
             <%= f.radio_button :shop_genre, Post.shop_genres.key(0) %>
             <%= f.label :shop_genre_old_clothing, Post.shop_genres_i18n[:old_clothing] %><br>
             <%= f.radio_button :shop_genre, Post.shop_genres.key(1) %>
@@ -60,13 +37,15 @@
             <%= f.radio_button :shop_genre, Post.shop_genres.key(4) %>
             <%= f.label :shop_genre_antique, Post.shop_genres_i18n[:antique] %><br>
           </div>
-          <div class="narrow_prefecture">
+          <div class="narrow_prefecture px-2 ">
+            <%= f.label :prefecture, '都道府県：'%> 
             <%= f.select :prefecture, Post.prefectures_i18n.invert,include_blank: true %>
           </div>
-          <div class="button">
-            <%= f.submit '適用', class:'btn btn-warning'%>
+          <div class="button px-2 pb-2 text-center">
+            <%= f.submit '適用', class:'btn btn-warning px-5'%>
           </div>
         <% end %>
       </div>
     </div>
   </div>
+</div>

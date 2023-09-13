@@ -1,37 +1,37 @@
 <div class="container">
   <div class="row">
-    <div class="col-sm-12 col-md-12 col-lg-12 mx-auto">
-      <div class="form">
-        <%= form_with model: @post, url: edit_tag_post_path(@post.id), method: :patch do |f| %>
+    <div class="col-sm-12 col-md-10 col-lg-10 mx-auto">
+      <div class="form py-2">
+        <%= form_with model: @post, url: edit_tag_post_path(@post.id), method: :patch, multipart: true do |f| %>
           <div class="form-group">
             <%= f.label :shop_genre, "ショップジャンル" %>
-            <%= f.select :shop_genre, Post.shop_genres_i18n.invert, selected: @post.shop_genre %>
+            <%= f.select :shop_genre, Post.shop_genres_i18n.invert, {}, {class: 'form-select form-control'} %>
           </div>
           <div class="form-group">
             <%= f.label :shop_name, "店名" %>
-            <%= f.text_field :shop_name %>
+            <%= f.text_field :shop_name, placeholder: "Vintage Shop", class:'form-control' %>
           </div>
           <div class="form-group">
             <%= f.label :prefecture, "都道府県" %>
-            <%= f.select :prefecture, Post.prefectures_i18n.invert, selected: @post.prefecture %>
+            <%= f.select :prefecture, Post.prefectures_i18n.invert, {}, {class: 'form-select form-control'} %>
           </div>
           <div class="form-group">
             <%= f.label :address, "住所" %>
-            <%= f.text_field :address %>
+            <%= f.text_field :address, placeholder: "〇〇県〇〇市〇〇町〇-〇", class:'form-control' %>
           </div>
           <div class="form-group">
             <%= f.label :post_images, "写真（5枚まで投稿できます）"%>
-            <%= f.file_field :post_images, accept: "image/*", multiple: true %>
+            <%= f.file_field :post_images, accept: "image/*", multiple: true, class:'form-control' %>
           </div>
           <div class="form-group">
             <%= f.label :review, "本文" %>
-            <%= f.text_area :review %>
+            <%= f.text_area :review, placeholder:"お店の情報、購入したもの、自慢したいこと、好きなように書きましょう", class: 'form-control' %>
           </div>
           <div class="form-group">
             <%= f.label :rate, "10段階評価（10が最高です）"%>
-            <%= f.select :rate, [["1", 1],["2", 2],["3", 3],["4", 4],["5", 5],["6", 6],["7", 7],["8", 8],["9", 9],["10", 10]]%>
+            <%= f.select :rate, [["1", 1],["2", 2],["3", 3],["4", 4],["5", 5],["6", 6],["7", 7],["8", 8],["9", 9],["10", 10]], {}, {class: 'form-select form-control'}%>
           </div>
-          <div class="form-group">
+          <div class="form-group text-right">
             <%= f.hidden_field :reading_status, :value => false %>
             <%= f.hidden_field :user_id, :value => current_user.id %>
             <%= f.submit 'タグ選択に進む', class:'btn btn-info' %>
