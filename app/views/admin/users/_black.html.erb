@@ -1,0 +1,23 @@
+<div class="user_show border border-secondary border-2 py-2 px-2 text-light bg-dark mb-2">
+  <div class="user_box_header d-flex align-items-stretch">
+    <div class="align-items-center">
+      <%= image_tag user.get_user_image(100,100) %>
+    </div>
+    <div class="user_name_favorite flex-fill">
+      <ul class="list-group">
+        <%= link_to admin_user_path(user.id) do %>
+          <li class="list-group-item list-group-item-action text-light bg-dark">
+            <strong>名前　</strong><%= user.name %><br>
+            <strong>自己紹介　</strong>
+            <%= user.introduction %>
+          </li>
+        <% end %>
+        <liclass="list-group-item text-light bg-dark">
+          <strong>削除投稿数：<%= user.number_of_deleted_posts.to_s %>　</strong>
+          <strong>削除コメント数：<%= user.number_of_deleted_comments.to_s %>　</strong>
+          <strong>削除タグ数：<%= user.number_of_deleted_tags.to_s %></strong>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

@@ -1,43 +1,29 @@
 <div class="container">
   <div class="row">
-    <div class="col-sm-12 col-md-8 col-lg-8">
+    <div class="col-sm-12 col-md-8 col-lg-8 my-2">
       <% @posts.each do |post_item| %>
-        <div class="post_item">
-          <div class="post_item_header">
-            <%= post_item.shop_genre_i18n %>
-            <%= post_item.prefecture_i18n %>
-            <%= post_item.created_at.strftime('%Y/%m/%d')%>
-          </div>
-          <div class="post_item_main">
-            <%= link_to admin_post_path(post_item.id) do %>
-              <%= image_tag post_item.post_images[0].variant(resize: "100x100")%>
-              <h3><%= post_item.shop_name %></h3>
-            <% end %>
-            <span><%= post_item.favorites.count %>いいね</span>
-            <% post_item.tags.limit(5).each do |tag| %>
-              <%= form_with url: search_tags_path, method: :get do |f| %>
-                <%=f.hidden_field :tag_ids, :value => tag.id %>
-                <%= f.submit "#{tag.name}" %>
-              <% end %>
-            <% end %>
-          </div>
-        </div>
+        <% if post_item.reading_status == false %>
+          <%= render 'admin/posts/item', post_item: post_item %>
+        <% elsif post_item.reading_status == true %>
+          <%= render 'admin/posts/deleted', post_item: post_item %>
+        <% end %>
       <% end %>
-     <%= paginate @posts%>
     </div>
-    <div class="col-sm-12 col-md-4 col-lg-4">
-      <div class="sort_narrow">
+    <div class="col-sm-12 col-md-4 col-lg-4 my-2">
+      <div class="sort_narrow border border-secondary border-3">
+        <div class="text-center bg-dark text-white py-2">絞り込み・並び替え</div>
         <%= form_with url: admin_posts_path, method: :get do |f| %>
-          <div class="sort">
-            <%= f.select :sort_rule, [["新しい順", 0],["古い順", 1],["評価が高い順", 2],["いいねが多い順", 3]] %>
+          <div class="sort px-2 pt-2 border-bottom border-secondary">
+            <%= f.label :sort_rule, '並び替え：'%>
+            <%= f.select :sort_rule, [["新しい順", 0],["古い順", 1],["評価が高い順", 2],["いいねが多い順", 3]], class:'form-control'%>
           </div>
-          <div class="narrow_reading_status border">
+          <div class="narrow_reading_status pt-2 px-4 border-bottom border-secondary">
             <%= f.radio_button :reading_status, "false" %>
             <%= f.label :reading_status_false, "閲覧可能投稿" %><br>
             <%= f.radio_button :reading_status, "true" %>
-            <%= f.label :reading_status_true, "閲覧停止済投稿" %>
+            <%= f.label :reading_status_true, "閲覧停止済投稿（赤）" %>
           </div>
-          <div class="narrow_shop_genre border">
+          <div class="narrow_shop_genre pt-2 px-4 border-bottom border-secondary">
             <%= f.radio_button :shop_genre, Post.shop_genres.key(0) %>
             <%= f.label :shop_genre_old_clothing, Post.shop_genres_i18n[:old_clothing] %><br>
             <%= f.radio_button :shop_genre, Post.shop_genres.key(1) %>
@@ -49,13 +35,15 @@
             <%= f.radio_button :shop_genre, Post.shop_genres.key(4) %>
             <%= f.label :shop_genre_antique, Post.shop_genres_i18n[:antique] %><br>
           </div>
-          <div class="narrow_prefecture border">
+          <div class="narrow_prefecture pt-2 px-2 border-bottom border-secondary">
+            <%= f.label :prefecture, '都道府県：' %> 
             <%= f.select :prefecture, Post.prefectures_i18n.invert,include_blank: true %>
           </div>
-          <div class="button">
-            <%= f.submit '適用', class:'btn btn-warning'%>
+          <div class="button px-2 py-2 text-center">
+            <%= f.submit '適用', class:'btn btn-warning px-5'%>
           </div>
         <% end %>
       </div>
     </div>
   </div>
+</div>

@@ -1,53 +1,53 @@
-<div class="container">
+<div class="container pb-2">
+  <div class="border border-secondary border-3 my-2 text-center py-2">
+    <span>
+    【優良ユーザー(緑)】削除投稿数0~3 削除コメント数0~5 削除タグ数0~5<br>
+    【注意ユーザー(黄)】削除投稿数4~6 削除コメント数6~10 削除タグ数6~10<br>
+    【要注意ユーザー(赤)】削除投稿数7~9 削除コメント数11~15 削除タグ数11~15<br>
+    【削除待ちユーザー(灰)】削除投稿数10~ 削除コメント数16~ 削除タグ数16~<br>
+    【削除済ユーザー(黒)】強制退会済ユーザー
+    </span>
+  </div>
   <div class="row">
-    <div class="border">
-      <p>
-      【優良ユーザー】削除投稿数0~3 削除コメント数0~5 削除タグ数0~5<br>
-      【注意ユーザー】削除投稿数4~6 削除コメント数6~10 削除タグ数6~10<br>
-      【要注意ユーザー】削除投稿数7~9 削除コメント数11~15 削除タグ数11~15
-      </p>
-    </div>
-    
     <div class="col-sm-12 col-md-8 col-lg-8">
       <% @users.each do |user| %>
-        <div class="user_box border">
-          <div class="user_box_header">
-            <%= link_to admin_user_path(user.id) do %><%= user.name %><% end %>
-            <%= user.most_favorite %>
-          </div>
-          <div class="user_box_main">
-            <%= image_tag user.get_user_image(80,80) %>
-            <p><%= user.introduction %></p>
-            <strong>削除投稿数：<%= user.number_of_deleted_posts.to_s %></strong>
-            <strong>削除コメント数：<%= user.number_of_deleted_comments.to_s %></strong>
-            <strong>削除タグ数：<%= user.number_of_deleted_tags.to_s %></strong>
-          </div>
-        </div>
+        <% if user.green? %>
+          <%= render 'admin/users/green', user: user %>
+        <% elsif user.yellow? %>
+          <%= render 'admin/users/yellow', user: user %>
+        <% elsif user.red? %>
+          <%= render 'admin/users/red', user: user %>
+        <% elsif user.gray? %>
+          <%= render 'admin/users/gray', user: user %>
+        <% elsif user.black?  %>
+          <%= render 'admin/users/black', user: user %>
+        <% end %>
       <% end %>
       <%= paginate @users %>
     </div>
     <div class="col-sm-12 col-md-4 col-lg-4">
-      <div class="sort_narrow">
+      <div class="sort_narrow border border-secondary border-3">
+        <div class="text-center bg-dark text-white py-2">絞り込み・並び替え</div>
         <%= form_with url: admin_users_path, method: :get do |f| %>
-          <div class="sort">
+          <div class="sort px-2 py-2 border-bottom border-secondary">
             <%= f.select :sort_rule, [["会員登録（降順）", 0],["会員登録（昇順）", 1],["投稿が多い順", 2],["コメントが多い順", 3],["作成タグが多い順", 4]] %>
           </div>
-          <div class="narrow_user_status">
+          <div class="narrow_user_status pt-2 px-4 border-bottom border-secondary">
             <%= f.radio_button :user_status, "all" %>
             <%= f.label :user_status_all, "全ユーザー", :checked => true %><br>
             <%= f.radio_button :user_status, "green" %>
-            <%= f.label :user_status_green, "優良ユーザー" %><br>
+            <%= f.label :user_status_green, "優良ユーザー(緑)" %><br>
             <%= f.radio_button :user_status, "yellow" %>
-            <%= f.label :user_status_green, "注意ユーザー" %><br>
+            <%= f.label :user_status_green, "注意ユーザー(黄)" %><br>
             <%= f.radio_button :user_status, "red" %>
-            <%= f.label :user_status_green, "要注意ユーザー" %><br>
+            <%= f.label :user_status_green, "要注意ユーザー(赤)" %><br>
             <%= f.radio_button :user_status, "gray" %>
-            <%= f.label :user_status_green, "削除待ユーザー" %><br>
+            <%= f.label :user_status_green, "削除待ユーザー(灰)" %><br>
             <%= f.radio_button :user_status, "black" %>
-            <%= f.label :user_status_green, "削除済ユーザー" %><br>
+            <%= f.label :user_status_green, "削除済ユーザー(黒)" %><br>
           </div>
-          <div class="button">
-            <%= f.submit '適用', class:'btn btn-warning'%>
+          <div class="button px-2 py-2 text-center">
+            <%= f.submit '適用', class:'btn btn-warning px-5'%>
           </div>
         <% end %>
       </div>

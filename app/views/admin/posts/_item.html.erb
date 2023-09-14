@@ -1,0 +1,27 @@
+<div class="post_item border border-secondary border-3 mb-1">
+  <div class="post_item_header bg-dark text-white d-flex py-2">
+    <div class="border border-light ml-2 px-2"><%= post_item.shop_genre_i18n %></div>
+    <div class="border border-light ml-2 px-2"><%= post_item.prefecture_i18n %></div>
+    <div class="border border-light ml-2 px-2 text-warning"><i class="fa-regular fa-star"></i><%= post_item.rate %></div>
+    <div class="border border-light ml-2 px-2"><%= post_item.created_at.strftime('%Y/%m/%d')%></div>
+  </div>
+  <div class="post_item_main d-flex">
+    <div class="image text-center">
+      <%= image_tag post_item.post_images[0].variant(resize: "100x100")%><br>
+      <span><%= post_item.favorites.count %>いいね</span>
+    </div>
+    <div class="shop_name_favorite_tags ml-2">
+      <%= link_to admin_post_path(post_item.id), class:'text-dark' do %>
+        <h2><%= post_item.shop_name %></h2>
+      <% end %>
+      
+      <div class="tags d-flex flex-wrap">
+        <% post_item.tags.limit(5).each do |tag| %>
+          <div class="text-light bg-info border border-light rounded px-2">
+            <%= tag.name %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

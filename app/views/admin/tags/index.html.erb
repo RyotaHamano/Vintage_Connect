@@ -1,32 +1,42 @@
 <div class="container">
+  <div class="new_tag text-center my-2">
+    <%= form_with model: @tag, url: admin_tags_path do |f| %>
+      <div class="form-group d-flex">
+        <%= f.text_field :name, placeholder: '新規タグ名', class:'form-control'%>
+        <%= f.hidden_field :is_available, :value => false %>
+        <%= f.submit '作成', class:'btn btn-success' %>
+      </div>
+    <% end %>
+  </div>
   <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12 mx-auto">
-      <div class="new_tag">
-        <%= form_with model: @tag, url: admin_tags_path do |f| %>
-          <div class="form-group">
-            <%= f.text_field :name, placeholder: '新規タグ名'%>
-            <%= f.hidden_field :is_available, :value => false %>
-            <%= f.submit '作成', class:'btn btn-success' %>
-          </div>
-        <% end %>
-      </div>
-      <div class="sort_tags">
-        <%= form_with url: admin_tags_path, method: :get do |form| %>
-          <%= form.select :sort_rule, [["新しい順", 0],["名前順", 1]] %>
+      <div class="sort_tags text-center">
+        <%= form_with url: admin_tags_path, method: :get, class:'d-flex' do |form| %>
+          <%= form.select :sort_rule, [["新しい順", 0],["名前順", 1]], {}, {class:'form-control form-select'} %>
           <%= form.submit '適用', class:'btn btn-warning'%>
         <% end %>
       </div>
-      <div class="tags">
+      <div class="border">
         <h3>使用可能タグ</h3>
-        <% @tags.each do |tag| %>
-          <%= link_to "#{tag.name}", disable_admin_tag_path(tag.id), method: :patch, data: { confirm: "使用不可にします" }, class:'btn btn-danger' %>
-        <% end %>
+        <div class="tags d-flex flex-wrap align-items-center">
+          <% @tags.each do |tag| %>
+              <div class="px-1 bg-danger mr-1 mb-1">
+                <%= link_to disable_admin_tag_path(tag.id), method: :patch, data: { confirm: "使用不可にします" }, class:'text-light' do %>
+                  <%= tag.name %>
+                <% end %>
+              </div>
+          <% end %>
+        </div>
       </div>
-      <div class="disabled_tags">
-        <h3>使用停止タグ</h3>
-        <% @disabled_tags.each do |disabled_tag| %>
-          <%= link_to "#{disabled_tag.name}", admin_user_path(disabled_tag.user.id), class:'btn btn-info'%>
-        <% end %>
+      <div class="border">
+        <h3>使用不可タグ</h3>
+        <div class="tags d-flex flex-wrap align-items-center">
+          <% @disabled_tags.each do |tag| %>
+              <div class="px-1 bg-dark mr-1 mb-1 text-light">
+                <%= tag.name %>
+              </div>
+          <% end %>
+        </div>
       </div>
     </div>
   </div>

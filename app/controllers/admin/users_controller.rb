@@ -21,7 +21,7 @@ class Admin::UsersController < ApplicationController
         7, 9, 11, 15, 11, 15
         )
     elsif params[:user_status] == "gray"
-      @users = @users.where("number_of_deleted_posts = ? OR number_of_deleted_comments = ? OR number_of_deleted_tags = ?", 10, 16, 16).where(is_admission: false)
+      @users = @users.where("number_of_deleted_posts >= ? OR number_of_deleted_comments >= ? OR number_of_deleted_tags >= ?", 10, 16, 16).where(is_admission: false)
     elsif params[:user_status] == "black"
       @users = User.where(is_admission: true)
     end 
@@ -42,7 +42,8 @@ class Admin::UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     @posts = @user.posts.all.order(id: :desc)
-    @comments = @user.comments.where(reading_status: true)
+    @comments = @user.comments.where(reading_status: false)
+    @deleted_comments = @user.comments.where(reading_status: true)
     @tags = @user.tags.where(is_available: false)
     @disabled_tags = @user.tags.where(is_available: true)
     if params[:reading_status] == "0"

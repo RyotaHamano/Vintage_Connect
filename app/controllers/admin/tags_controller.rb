@@ -5,8 +5,8 @@ class Admin::TagsController < ApplicationController
     @disabled_tags = Tag.where(is_available: true).order(id: :desc)
     @tag = Tag.new
     if params[:sort_rule] == "1"
-      @tags = @tags.order(:name)
-      @disabled_tags = @disabled_tags.order(:name)
+      @tags = Tag.where(is_available: false).order(:name)
+      @disabled_tags = Tag.where(is_available: true).order(:name)
     end
   end
   
@@ -19,7 +19,7 @@ class Admin::TagsController < ApplicationController
   def disable
     tag = Tag.find(params[:id])
     tag.update(is_available: true)
-    if tag.user_id.exists?
+    if tag.user_id != nil
       user = tag.user
       user.number_of_deleted_tags += 1
       user.save

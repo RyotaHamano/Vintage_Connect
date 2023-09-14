@@ -38,4 +38,36 @@ class User < ApplicationRecord
     follow_user.include?(user)
   end
   
+  def green?
+    posts = self.number_of_deleted_posts
+    comments = self.number_of_deleted_comments
+    tags = self.number_of_deleted_tags
+    return true if (self.is_admission == false) && (posts <= 3) && (comments <= 5) && (tags <= 5)
+  end
+  
+  def yellow?
+    posts = self.number_of_deleted_posts
+    comments = self.number_of_deleted_comments
+    tags = self.number_of_deleted_tags
+    return true if (self.is_admission == false) && ((posts >= 4 && posts <= 6) || (comments >= 6 && comments <= 10) || (tags <= 6 && tags <= 10))
+  end
+  
+  def red?
+    posts = self.number_of_deleted_posts
+    comments = self.number_of_deleted_comments
+    tags = self.number_of_deleted_tags
+    return true if (self.is_admission == false) && ((posts >= 7 && posts <= 9) || (comments >= 11 && comments <= 15) || (tags <= 11 && tags <= 15))
+  end
+  
+  def gray?
+    posts = self.number_of_deleted_posts
+    comments = self.number_of_deleted_comments
+    tags = self.number_of_deleted_tags
+    return true if (self.is_admission == false) && ((posts >= 10) || (comments >= 16) || (tags <= 16))
+  end
+  
+  def black?
+    return true if self.is_admission == true
+  end
+  
 end
