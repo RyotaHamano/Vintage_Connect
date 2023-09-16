@@ -56,14 +56,14 @@ class User < ApplicationRecord
     posts = self.number_of_deleted_posts
     comments = self.number_of_deleted_comments
     tags = self.number_of_deleted_tags
-    return true if (self.is_admission == false) && ((posts >= 4 && posts <= 6) || (comments >= 6 && comments <= 10) || (tags <= 6 && tags <= 10))
+    return true if (self.is_admission == false) && ((posts <= 6) && (comments <= 10) && (tags <= 10))
   end
   
   def red?
     posts = self.number_of_deleted_posts
     comments = self.number_of_deleted_comments
     tags = self.number_of_deleted_tags
-    return true if (self.is_admission == false) && ((posts >= 7 && posts <= 9) || (comments >= 11 && comments <= 15) || (tags <= 11 && tags <= 15))
+    return true if (self.is_admission == false) && ((posts <= 9) && (comments <= 15) && (tags <= 15))
   end
   
   def gray?

@@ -21,24 +21,40 @@
         </ul>
         
       </div>
-      <div class="comments border border-secondary border-3 px-2 mt-2">
-        <p>有効コメント</p>
-        <% @comments.each do |comment| %>
-          <div class="border mb-1">
-            <%= link_to admin_post_path(comment.post.id), class:'text-dark' do %>投稿：<%= comment.post.shop_name %><% end %><br>
-            <%= comment.text %>
-            <%= link_to '強制削除', admin_restrict_viewing_comment_path(comment.post.id, comment.id), method: :patch, data: { confirm: "よろしいですか？" }, class:'btn btn-danger'%>
-          </div>
-        <% end %>
+      <div class="border border-secondary border-3 mt-2">
+        <div class="text-center bg-dark text-light mb-1"><span>有効コメント</span></div>
+        <div class="comments overflow-auto">
+          <% @comments.each do |comment| %>
+            <div class="border mb-1 mx-1">
+              <%= link_to admin_post_path(comment.post.id), class:'text-dark' do %><strong>投稿：<%= comment.post.shop_name %></strong><% end %>
+              <% if comment.top_parent_id == nil %>
+                <span>(親コメ)</span>
+              <% else %>
+                <span>(リプ)</span>
+              <% end %>
+              <br>
+              <%= comment.text %>
+              <%= link_to '強制削除', admin_restrict_viewing_comment_path(comment.post.id, comment.id), method: :patch, data: { confirm: "親コメントの場合リプライはすべて削除されます。よろしいですか？" }, class:'btn btn-danger'%>
+            </div>
+          <% end %>
+        </div>
       </div>
-      <div class="deleted_comments border border-secondary border-3 px-2 mt-2">
-        <p>削除済コメント</p>
-        <% @deleted_comments.each do |d_comment| %>
-          <div class="border bg-dark text-light mb-1">
-            <%= link_to admin_post_path(d_comment.post.id), class:'text-dark' do %>投稿：<%= d_comment.post.shop_name %><% end %><br>
-            <%= d_comment.text %>
-          </div>
-        <% end %>
+      <div class="border border-secondary border-3 mt-2">
+        <div class="text-center bg-dark text-light mb-1"><span>削除済コメント</span></div>
+        <div class="deleted_comments overflow-auto mx-1">
+          <% @deleted_comments.each do |d_comment| %>
+            <div class="border border-light bg-dark text-light mb-1">
+              <%= link_to admin_post_path(d_comment.post.id), class:'text-light' do %>投稿：<%= d_comment.post.shop_name %><% end %>
+              <% if d_comment.top_parent_id == nil %>
+                <span>(親コメ)</span>
+              <% else %>
+                <span>(リプ)</span>
+              <% end %>
+              <br>
+              <%= d_comment.text %>
+            </div>
+          <% end %>
+        </div>
       </div>
     </div>
     <div class="col-sm-12 col-md-6 col-lg-6">
@@ -79,16 +95,16 @@
         <% end %>
       </div>
       <div class="tags border border-secondary border-3">
-        <div class="text-center bg-dark text-light"><span>有効タグ</span></div>
-        <div class="able d-flex flex-wrap">
+        <div class="text-center bg-dark text-light mb-1"><span>有効タグ</span></div>
+        <div class="able d-flex flex-wrap overflow-auto">
           <% @tags.each do |tag| %>
             <%= link_to disable_admin_tag_path(tag.id), method: :patch, data: { confirm: "使用不可にします" } do %>
               <div class="border rounded bg-danger text-white px-2"><%= tag.name %></div>
             <% end %>
           <% end %>
         </div>
-        <div class="text-center bg-dark text-light"><p>削除済タグ</p></div>
-        <div class="disabled d-flex flex-wrap">
+        <div class="text-center bg-dark text-light mb-1"><p>削除済タグ</p></div>
+        <div class="disabled d-flex flex-wrap align-items-start overflow-auto">
           <% @disabled_tags.each do |d_tag| %>
             <div class="border rounded bg-dark text-white px-2"><%= d_tag.name %></div>
           <% end %>

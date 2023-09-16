@@ -31,6 +31,9 @@
           </div>
         </div>
       <% end %>
+      <% if @users.count >= 5 %>
+        <%= paginate @users %>
+      <% end %>
     </div>
   </div>
 </div>

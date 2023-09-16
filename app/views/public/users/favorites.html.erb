@@ -5,6 +5,9 @@
     </div>
     <div class="col-sm-12 col-md-8 col-lg-8 mt-2">
       <%= render 'public/posts/item', posts: @favorite_posts %>
+      <% if @favorite_posts.count >= 5 %>
+        <%= paginate @favorite_posts %>
+      <% end %>
     </div>
   </div>
 </div>

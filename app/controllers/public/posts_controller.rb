@@ -3,7 +3,7 @@ class Public::PostsController < ApplicationController
   before_action :ensure_guest_user, except: [:index, :search, :show]
   
   def index
-    @posts = Post.where(reading_status: false)
+    @posts = Post.where(reading_status: false).order(id: :desc)
     if params[:shop_genre].present?
       @posts = @posts.where(shop_genre: params[:shop_genre])
     end
@@ -19,7 +19,7 @@ class Public::PostsController < ApplicationController
     elsif params[:sort_rule] == "3"
       @posts = @posts.includes(:favorites).sort{|a,b| b.favorites.size <=> a.favorites.size }
     end
-    
+    @posts = @posts.page(params[:page])
   end
   
   def search

@@ -12,7 +12,7 @@
         <span><%= post_item.favorites.count %>いいね</span>
       </div>
       <div class="shop_name_favorite_tags ml-2">
-        <%= link_to post_path(post_item.id) do %>
+        <%= link_to post_path(post_item.id), class:'text-dark' do %>
           <h2><%= post_item.shop_name %></h2>
         <% end %>
         

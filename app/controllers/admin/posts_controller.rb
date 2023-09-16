@@ -20,7 +20,7 @@ class Admin::PostsController < ApplicationController
     elsif params[:sort_rule] == "3"
       @posts = @posts.includes(:favorites).sort{|a,b| b.favorites.size <=> a.favorites.size }
     end
-    @posts = @posts.page(params[:page])
+    
   end
   
   def show

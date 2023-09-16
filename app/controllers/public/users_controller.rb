@@ -10,6 +10,9 @@ class Public::UsersController < ApplicationController
   def favorites
     @user = User.find(params[:id])
     @favorite_posts = @user.favorite_posts.where(reading_status: false).sort{|a, b| b.favorites.ids <=> a.favorites.ids }
+    if @favorite_posts.count >= 5
+      @favorite_posts = @favorite_posts.page(params[:page])
+    end
   end
 
   def edit
@@ -36,11 +39,12 @@ class Public::UsersController < ApplicationController
   def follow
     @user = User.find(params[:id])
     @users = @user.follow_user
+    @users = @users.page(params[:page])
   end
   
   def followed
     @user = User.find(params[:id])
-    @users = @user.followed_user
+    @users = @user.followed_user.page(params[:page])
   end
   
   private

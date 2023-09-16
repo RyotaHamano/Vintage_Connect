@@ -1,23 +1,13 @@
 <div class="container">
-  <%= flash[:error] %>
-  <div class="new_tag text-center my-2">
-    <%= form_with model: @tag, url: admin_tags_path do |f| %>
-      <div class="form-group d-flex">
-        <%= f.text_field :name, placeholder: '新規タグ名', class:'form-control'%>
-        <%= f.hidden_field :is_available, :value => false %>
-        <%= f.submit '作成', class:'btn btn-success' %>
-      </div>
-    <% end %>
-  </div>
   <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12 mx-auto">
-      <div class="sort_tags text-center">
+      <div class="sort_tags text-center my-2">
         <%= form_with url: admin_tags_path, method: :get, class:'d-flex' do |form| %>
           <%= form.select :sort_rule, [["新しい順", 0],["名前順", 1]], {}, {class:'form-control form-select'} %>
           <%= form.submit '適用', class:'btn btn-warning'%>
         <% end %>
       </div>
-      <div class="border">
+      <div class="border mb-2">
         <h3>使用可能タグ</h3>
         <div class="tags d-flex flex-wrap align-items-center">
           <% @tags.each do |tag| %>

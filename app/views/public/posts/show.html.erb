@@ -86,15 +86,15 @@
           </div>
         </div>
       </div>
-      <div class="comments my-2">
+      <div class="comments my-2 overflow-auto">
         <% @comments.each do |comment| %>
           <div class="comment_item border border-secondary d-flex">
             <div class="image"><%= image_tag comment.user.get_user_image(60, 60) %></div>
             <div class="comment_body">
-              <%= link_to user_path(comment.user.id) do %>
+              <%= link_to user_path(comment.user.id), class:'text-dark' do %>
                 <%= comment.user.name %><br>
               <% end %>
-              <%= comment.text %>
+              　<%= comment.text %>
             </div>
             <div class="align-items-center ms-auto">
               <% if current_user.id == comment.user.id %>
@@ -109,10 +109,10 @@
                   <%= image_tag reply.user.get_user_image(50,50) %>
                 </div>
                 <div class="reply_body">
-                  <%= link_to user_path(reply.user.id) do %>
-                    <%= reply.user.name %>
+                  <%= link_to user_path(reply.user.id), class:'text-dark' do %>
+                    <%= reply.user.name %><br>
                   <% end %>
-                  <%= reply.text %>
+                  　<%= reply.text %>
                 </div>
                 <div class="align-items-center">
                   <% if current_user.id == reply.user.id %>

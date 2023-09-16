@@ -17,9 +17,8 @@
             <div class="flex-shrink-1 d-flex flex-wrap align-items-center mr-1">
               <% @post.tags.each do |tag| %>
                 <div class="text-light mx-1">
-                  <%= form_with url:search_tags_path, method: :get do |f| %>
-                    <%= f.hidden_field :tag_ids, :value => tag.id %>
-                    <%= f.submit "#{tag.name}", class:'btn btn-info mb-1'%>
+                  <%= link_to disable_admin_tag_path(tag.id), method: :patch, data: { confirm: "使用不可にします" } do %>
+                    <div class="border rounded bg-danger text-center text-white px-2"><%= tag.name %></div>
                   <% end %>
                 </div>
               <% end %>
@@ -59,7 +58,7 @@
           </div>
           <div class="user_name_favorite flex-fill text-center">
             <ul class="list-group ">
-              <%= link_to user_path(@user.id) do %>
+              <%= link_to admin_user_path(@user.id) do %>
                 <li class="list-group-item list-group-item-action">
                   <strong>名前　</strong><%= @user.name %>
                   <strong>　自己紹介　</strong>
@@ -71,7 +70,7 @@
         </div>
       </div>
       
-      <div class="comments my-2">
+      <div class="comments my-2 overflow-auto">
         <% @comments.each do |comment| %>
           <div class="comment_item border border-secondary d-flex mt-1">
             <div class="image"><%= image_tag comment.user.get_user_image(60, 60) %></div>

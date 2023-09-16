@@ -30,6 +30,7 @@ class Admin::TagsController < ApplicationController
       user.number_of_deleted_tags += 1
       user.save
     end 
+    tag.taggings.destroy_all
     redirect_to request.referer
   end
   

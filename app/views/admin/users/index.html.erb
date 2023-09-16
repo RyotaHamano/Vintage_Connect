@@ -23,7 +23,9 @@
           <%= render 'admin/users/black', user: user %>
         <% end %>
       <% end %>
-      <%= paginate @users %>
+      <% if @users.count >= 5 %>
+        <%= paginate @users %>
+      <% end %>
     </div>
     <div class="col-sm-12 col-md-4 col-lg-4">
       <div class="sort_narrow border border-secondary border-3">

@@ -5,6 +5,9 @@
     </div>
     <div class="col-sm-12 col-md-8 col-lg-8 my-2">
       <%= render 'public/posts/item', posts: @posts %>
+      <% if @posts.count >= 5 %>
+        <%= paginate @posts %>
+      <% end %>
     </div>
   </div>
 </div>

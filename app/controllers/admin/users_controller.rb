@@ -1,34 +1,54 @@
 class Admin::UsersController < ApplicationController
   
   def index
-    @users = User.where(is_admission: false)
+    @users = User.where(is_admission: false).where.not(email: "guest@example.com")
+    green_users = []
+    yellow_users = []
+    red_users = []
+    gray_users = []
+    @users.each do |user|
+      if user.green?
+        green_users << user
+      elsif user.yellow?
+        yellow_users << user
+      elsif user.red?
+        red_users << user
+      elsif user.gray?
+        gray_users << user
+      end
+    end
+    
     if params[:user_status] == "all"
       @users = User.all
     elsif params[:user_status] == "green"
-      @users = @users.where("number_of_deleted_posts <= ? AND number_of_deleted_comments <= ? AND number_of_deleted_tags <= ?", 3, 5, 5)
+      #@users = @users.where("number_of_deleted_posts <= ? AND number_of_deleted_comments <= ? AND number_of_deleted_tags <= ?", 3, 5, 5)
+      @users = green_users
     elsif params[:user_status] == "yellow"
-      @users = @users.where(
-        "number_of_deleted_posts >= ? AND number_of_deleted_posts <= ? OR " \
-        "number_of_deleted_comments >= ? AND number_of_deleted_comments <= ? OR " \
-        "number_of_deleted_tags >= ? AND number_of_deleted_tags <= ?",
-        4, 6, 6, 10, 6, 10
-        )
+      #@users = @users.where(
+        #"number_of_deleted_posts >= ? AND number_of_deleted_posts <= ? OR " \
+        #"number_of_deleted_comments >= ? AND number_of_deleted_comments <= ? OR " \
+        #"number_of_deleted_tags >= ? AND number_of_deleted_tags <= ?",
+        #4, 6, 6, 10, 6, 10
+        #)
+      @users = yellow_users
     elsif params[:user_status] == "red"
-      @users = @users.where(
-        "number_of_deleted_posts >= ? AND number_of_deleted_posts <= ? OR " \
-        "number_of_deleted_comments >= ? AND number_of_deleted_comments <= ? OR " \
-        "number_of_deleted_tags >= ? AND number_of_deleted_tags <= ?",
-        7, 9, 11, 15, 11, 15
-        )
+      #@users = @users.where(
+        #"number_of_deleted_posts >= ? AND number_of_deleted_posts <= ? OR " \
+        #"number_of_deleted_comments >= ? AND number_of_deleted_comments <= ? OR " \
+        #"number_of_deleted_tags >= ? AND number_of_deleted_tags <= ?",
+        #7, 9, 11, 15, 11, 15
+        #)
+      @users = red_users
     elsif params[:user_status] == "gray"
-      @users = @users.where("number_of_deleted_posts >= ? OR number_of_deleted_comments >= ? OR number_of_deleted_tags >= ?", 10, 16, 16).where(is_admission: false)
+      #@users = @users.where("number_of_deleted_posts >= ? OR number_of_deleted_comments >= ? OR number_of_deleted_tags >= ?", 10, 16, 16).where(is_admission: false)
+      @users = gray_users
     elsif params[:user_status] == "black"
       @users = User.where(is_admission: true)
     end 
     if params[:sort_rule] == "0"
-      @users = @users.order(id: :desc)
+      @users = @users.sort{|a, b|b.id <=> a.id }
     elsif params[:sort_rule] == "1"
-      @users = @users.order(id: :asc)
+      @users = @users.sort{|a, b|a.id <=> b.id }
     elsif params[:sort_rule] == "2"
       @users = @users.sort{|a, b|b.posts.size <=> a.posts.size }
     elsif params[:sort_rule] == "3"
@@ -36,7 +56,9 @@ class Admin::UsersController < ApplicationController
     elsif params[:sort_rule] == "4"
       @users = @users.sort{|a,b| b.tags.size <=> a.tags.size }
     end
-    @users = @users.page(params[:page])
+    if @users.count >= 5
+      @users = @users.page(params[:page])
+    end
   end
 
   def show
