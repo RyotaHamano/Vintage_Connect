@@ -1,7 +1,9 @@
 class Admin::UsersController < ApplicationController
+  before_action :authenticate_admin!
   
   def index
     @users = User.where(is_admission: false).where.not(email: "guest@example.com")
+    # ユーザーステータスによって空配列に格納
     green_users = []
     yellow_users = []
     red_users = []
@@ -17,30 +19,15 @@ class Admin::UsersController < ApplicationController
         gray_users << user
       end
     end
-    
     if params[:user_status] == "all"
       @users = User.all
     elsif params[:user_status] == "green"
-      #@users = @users.where("number_of_deleted_posts <= ? AND number_of_deleted_comments <= ? AND number_of_deleted_tags <= ?", 3, 5, 5)
       @users = green_users
     elsif params[:user_status] == "yellow"
-      #@users = @users.where(
-        #"number_of_deleted_posts >= ? AND number_of_deleted_posts <= ? OR " \
-        #"number_of_deleted_comments >= ? AND number_of_deleted_comments <= ? OR " \
-        #"number_of_deleted_tags >= ? AND number_of_deleted_tags <= ?",
-        #4, 6, 6, 10, 6, 10
-        #)
       @users = yellow_users
     elsif params[:user_status] == "red"
-      #@users = @users.where(
-        #"number_of_deleted_posts >= ? AND number_of_deleted_posts <= ? OR " \
-        #"number_of_deleted_comments >= ? AND number_of_deleted_comments <= ? OR " \
-        #"number_of_deleted_tags >= ? AND number_of_deleted_tags <= ?",
-        #7, 9, 11, 15, 11, 15
-        #)
       @users = red_users
     elsif params[:user_status] == "gray"
-      #@users = @users.where("number_of_deleted_posts >= ? OR number_of_deleted_comments >= ? OR number_of_deleted_tags >= ?", 10, 16, 16).where(is_admission: false)
       @users = gray_users
     elsif params[:user_status] == "black"
       @users = User.where(is_admission: true)
@@ -81,6 +68,7 @@ class Admin::UsersController < ApplicationController
     
   end
   
+  # 強制退会処理（投稿＆コメント全削除）
   def withdraw
     user = User.find(params[:id])
     posts = user.posts.where(reading_status: false)

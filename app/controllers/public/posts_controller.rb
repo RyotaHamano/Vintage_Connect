@@ -23,7 +23,9 @@ class Public::PostsController < ApplicationController
   end
   
   def search
-    session[:shop_name] = params[:shop_name]
+    if params[:shop_name].present?
+      session[:shop_name] = params[:shop_name]
+    end
     @posts = Post.where(reading_status: false).where("shop_name LIKE?", "%#{session[:shop_name]}%")
     if params[:shop_genre].present?
       @posts = @posts.where(shop_genre: params[:shop_genre])
@@ -31,8 +33,14 @@ class Public::PostsController < ApplicationController
     if params[:prefecture].present?
       @posts = @posts.where(prefecture: params[:prefecture])
     end
-    if params[:sort_rule].present?
-      Post.sort_branch(@posts, params[:sort_rule])
+    if params[:sort_rule] == "0"
+      @posts = @posts.order(id: :desc)
+    elsif params[:sort_rule] == "1"
+      @posts = @posts.order(id: :asc)
+    elsif params[:sort_rule] == "2"
+      @posts = @posts.order(rate: :desc)
+    elsif params[:sort_rule] == "3"
+      @posts = @posts.includes(:favorites).sort{|a,b| b.favorites.size <=> a.favorites.size }
     end
     @posts = @posts.page(params[:page])
   end
@@ -44,18 +52,18 @@ class Public::PostsController < ApplicationController
   def tag_select
     @post = Post.new(post_params)
     session[:new_post] = @post
-    # 一時ファイルの作成。一時ファイルへのパスをsessionに格納
+    # 複数画像の一時保存処理
     @temp_files = []
-    temp_file_dir = Rails.root.join('tmp', 'uploads') # ディレクトリを調整してください
+    temp_file_dir = Rails.root.join('tmp', 'uploads') # ディレクトリの調整
     FileUtils.mkdir_p(temp_file_dir) # ディレクトリが存在しない場合に作成
-    params[:post][:post_images].each_with_index do |image, index|
+    params[:post][:post_images].each_with_index do |image, index| #受け取った画像データを繰り返し処理で一時ファイルに格納
       temp_file = Tempfile.new("tempfile_#{index}", temp_file_dir)
       temp_file.binmode
       temp_file.write(image.read)
       temp_file.rewind
       @temp_files << temp_file
     end
-    session[:temporary_image_pathes] = @temp_files.map(&:path)
+    session[:temporary_image_pathes] = @temp_files.map(&:path) # セッションに一時ファイルへのパスを格納
     redirect_to tag_select_display_posts_path
   end
   
@@ -83,7 +91,7 @@ class Public::PostsController < ApplicationController
   def create
     @post = Post.new(session[:new_post])
     @temp_image_pathes = session[:temporary_image_pathes]
-    @temp_image_pathes.each do |image_path|
+    @temp_image_pathes.each do |image_path| # 一時ファイルからファイルを呼び出しActiveStorageに格納
       file = File.open(image_path)
       blob = ActiveStorage::Blob.create_after_upload!(
         io: file,
@@ -94,13 +102,13 @@ class Public::PostsController < ApplicationController
     end
     @tags = Tag.where(id: session[:tag_ids])
     @post.save
-    @tags.each do |tag|
+    @tags.each do |tag| # 投稿とタグの中間テーブル作成処理
       tagging = Tagging.new
       tagging.post_id = @post.id
       tagging.tag_id = tag.id
       tagging.save
     end
-    session.delete(:new_post)
+    session.delete(:new_post) #セッション削除
     session.delete(:tag_ids)
     session.delete(:temporary_image_pathes)
     redirect_to post_path(@post.id)
@@ -124,9 +132,9 @@ class Public::PostsController < ApplicationController
     # 投稿内の画像を変更する場合
     if params[:post][:post_images].present?
       @temp_files = []
-      temp_file_dir = Rails.root.join('tmp', 'uploads') # ディレクトリを調整してください
+      temp_file_dir = Rails.root.join('tmp', 'uploads') # ディレクトリを調整
       FileUtils.mkdir_p(temp_file_dir) # ディレクトリが存在しない場合に作成
-      params[:post][:post_images].each_with_index do |image, index|
+      params[:post][:post_images].each_with_index do |image, index| # 受け取った画像データを繰り返し処理で一時ファイルに格納
         temp_file = Tempfile.new("tempfile_#{index}", temp_file_dir)
         temp_file.binmode
         temp_file.write(image.read)
@@ -161,7 +169,7 @@ class Public::PostsController < ApplicationController
       @tmp_images=[]
       @temp_image_pathes.each do |image_path|
         
-        # file_data = File.read(image_path)ファイルを消してしまう記述？
+        # file_data = File.read(image_path)はファイルを消してしまう記述？
         file_data = File.open(image_path, File::RDONLY){|file| file.read}
         @tmp_images << Base64.strict_encode64(file_data)
       end

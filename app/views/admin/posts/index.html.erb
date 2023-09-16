@@ -8,7 +8,9 @@
           <%= render 'admin/posts/deleted', post_item: post_item %>
         <% end %>
       <% end %>
-      
+      <% if @posts.count >= 5 %>
+        <%= paginate @posts %>
+      <% end %>
     </div>
     <div class="col-sm-12 col-md-4 col-lg-4 my-2">
       <div class="sort_narrow border border-secondary border-3">

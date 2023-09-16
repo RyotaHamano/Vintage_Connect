@@ -1,4 +1,5 @@
 class Admin::TagsController < ApplicationController
+  before_action :authenticate_admin!
   
   def index
     @tags = Tag.where(is_available: false).order(id: :desc)
@@ -10,26 +11,12 @@ class Admin::TagsController < ApplicationController
     end
   end
   
-  def create
-    tag = Tag.new(tag_params)
-    tag.user_id = nil
-    if tag.save
-      redirect_to admin_tags_path
-    else
-    # エラーがある場合、エラーを調べることができます
-      flash[:error] = tag.errors.full_messages.to_sentence
-    end
-    redirect_to admin_tags_path
-  end
-  
   def disable
     tag = Tag.find(params[:id])
     tag.update(is_available: true)
-    if tag.user_id != nil
-      user = tag.user
-      user.number_of_deleted_tags += 1
-      user.save
-    end 
+    user = tag.user
+    user.number_of_deleted_tags += 1
+    user.save
     tag.taggings.destroy_all
     redirect_to request.referer
   end

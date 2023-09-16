@@ -1,4 +1,5 @@
 class Admin::PostsController < ApplicationController
+  before_action :authenticate_admin!
   
   def index
     @posts = Post.all
@@ -20,7 +21,9 @@ class Admin::PostsController < ApplicationController
     elsif params[:sort_rule] == "3"
       @posts = @posts.includes(:favorites).sort{|a,b| b.favorites.size <=> a.favorites.size }
     end
-    
+    if @posts.count >= 5
+      @posts = @posts.page(params[:page])
+    end
   end
   
   def show

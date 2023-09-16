@@ -1,4 +1,5 @@
 class Admin::CommentsController < ApplicationController
+  before_action :authenticate_admin!
   
   def restrict_viewing
     comment = Comment.find(params[:id])

@@ -68,7 +68,7 @@ Rails.application.routes.draw do
       end
     end
     
-    resources :tags, only:[:index, :create] do
+    resources :tags, only:[:index] do
       member do
         patch 'disable'
       end
