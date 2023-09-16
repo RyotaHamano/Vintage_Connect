@@ -1,4 +1,6 @@
 class Public::PostsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :ensure_guest_user, except: [:index, :search, :show]
   
   def index
     @posts = Post.where(reading_status: false)

@@ -102,7 +102,7 @@ ActiveRecord::Schema.define(version: 2023_09_05_104737) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "user_id"
-    t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x00007f30123f22c8>"
+    t.integer "#<ActiveRecord::ConnectionAdapters::SQLite3::TableDefinition:0x00007fa34b2f9db0>"
     t.index ["name"], name: "index_tags_on_name", unique: true
   end
 

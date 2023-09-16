@@ -1,4 +1,6 @@
 class Public::RelationsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :ensure_guest_user
   
   def create
     current_user.follow.create(followed_id: params[:user_id])

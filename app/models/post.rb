@@ -1,5 +1,12 @@
 class Post < ApplicationRecord
   
+  validates :shop_genre, presence: true
+  validates :shop_name, presence: true
+  validates :prefecture, presence: true
+  validates :address, presence: true
+  validates :review, presence: true, length:{maximum: 200}
+  validates :rate, presence: true
+  
   has_many_attached :post_images
   
   has_many :taggings, dependent: :destroy

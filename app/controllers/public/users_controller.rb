@@ -1,9 +1,10 @@
 class Public::UsersController < ApplicationController
+  before_action :authenticate_user!
+  before_action :ensure_guest_user, only: [:edit, :update, :confirm, :destroy]
   
   def show
     @user = User.find(params[:id])
     @posts = @user.posts.where(reading_status: false).order(id: :desc).page(params[:page])
-    
   end
   
   def favorites

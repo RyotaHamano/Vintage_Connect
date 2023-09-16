@@ -18,7 +18,6 @@
           <div class="logo">
              <h1 class="text-light">Vintage Connect</h1>
           </div>
-          <p class="text-center"><%= flash[:notice] %></p>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -34,7 +33,7 @@
                 <li><%= link_to 'タグ一覧', admin_tags_path, class:'btn btn-secondary mx-3 my-2' %></li>
                 <li><%= link_to 'ログアウト', destroy_admin_session_path, method: :delete, class:'btn btn-secondary mx-3 my-2' %></li>
               <% else %>
-                <li><%= link_to 'ゲストログイン', users_guest_sign_in_path, class:'btn btn-secondary mx-3 my-2' %></li>
+                <li><%= link_to 'ゲストログイン', users_guest_sign_in_path, method: :post, class:'btn btn-secondary mx-3 my-2' %></li>
                 <li><%= link_to '新規登録', new_user_registration_path, class:'btn btn-primary mx-3 my-2' %></li>
                 <li><%= link_to 'ログイン', new_user_session_path, class:'btn btn-success mx-3 my-2'%></li>
               <% end %>
@@ -42,6 +41,7 @@
           </div>
         </div>
       </nav>
+      <div class="text-center"><span class="text-light"><%= flash[:notice] %></span></div>
     </header>
     <%= yield %>
     <footer class="bg-dark text-center text-light">

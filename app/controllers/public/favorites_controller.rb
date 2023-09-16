@@ -1,5 +1,8 @@
 class Public::FavoritesController < ApplicationController
   
+  before_action :authenticate_user!
+  before_action :ensure_guest_user
+  
   def create
     @post = Post.find(params[:post_id])
     favorite = @post.favorites.new(user_id: current_user.id)

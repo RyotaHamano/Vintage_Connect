@@ -1,4 +1,6 @@
 class Public::TagsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :ensure_guest_user, only:[:create]
   
   def index
     @tags = Tag.where(is_available: false).order(:name)

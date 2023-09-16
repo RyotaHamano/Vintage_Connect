@@ -4,6 +4,9 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
          
+  validates :name, presence: true
+  
+         
   has_one_attached :user_image
   
   def get_user_image(width,height)
@@ -32,6 +35,10 @@ class User < ApplicationRecord
       user.password = SecureRandom.urlsafe_base64
       user.name = "ゲスト"
     end
+  end
+  
+  def guest_user?
+    email == GUEST_USER_EMAIL
   end
   
   def follow?(user)

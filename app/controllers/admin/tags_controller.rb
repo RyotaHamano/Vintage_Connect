@@ -12,7 +12,13 @@ class Admin::TagsController < ApplicationController
   
   def create
     tag = Tag.new(tag_params)
-    tag.save
+    tag.user_id = nil
+    if tag.save
+      redirect_to admin_tags_path
+    else
+    # エラーがある場合、エラーを調べることができます
+      flash[:error] = tag.errors.full_messages.to_sentence
+    end
     redirect_to admin_tags_path
   end
   
