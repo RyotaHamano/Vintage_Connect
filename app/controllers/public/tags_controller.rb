@@ -30,7 +30,8 @@ class Public::TagsController < ApplicationController
   def create
     tag = Tag.new(tag_params)
     tag.save
-    redirect_to tag_select_display_posts_path
+    @tags = Tag.where(is_available: false).order(:name)
+    @tag = Tag.new
   end
   
   private

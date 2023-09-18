@@ -1,0 +1,12 @@
+<%= form_with url: preview_posts_path, method: :get do |f| %>
+  <div class="form-group d-flex flex-wrap">
+    <%= f.collection_check_boxes :tag_ids, tags, :id, :name, class:'form-control' do |b| %>
+        <div class="flex-fill border border-secondary px-1 pt-1">
+          <%= b.label { b.check_box + b.text }%>
+        </div>
+    <% end %>
+  </div>
+  <div class="form-group text-right">
+    <%= f.submit 'プレビューに進む', class:'btn btn-info'%>
+  </div>
+<% end %>

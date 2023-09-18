@@ -1,19 +1,21 @@
 <div class="container">
   <div class="row text-center">
-    <div class="col-sm-12 col-md-9 col-lg-9 mx-auto mt-2 pt-2 border border-secondary border-3">
+    <div class="col-sm-12 col-md-9 col-lg-9 mx-auto my-2 pt-2 border border-secondary border-3">
       <p><strong>10個まで選択可能です</strong></p>
-      <%= form_with url: edit_preview_post_path(@post.id), method: :get do |f| %>
-        <div class="form-group d-flex flex-wrap">
-          <%= f.collection_check_boxes :tag_ids, @tags, :id, :name, class:'form-control' do |b| %>
-              <div class="flex-fill border border-secondary px-1 pt-1">
-                <%= b.label { b.check_box + b.text }%>
-              </div>
-          <% end %>
-        </div>
-        <div class="form-group text-right">
-          <%= f.submit 'プレビューに進む', class:'btn btn-info'%>
-        </div>
-      <% end %>
+      <div class="tags_index">
+        <%= form_with url: edit_preview_post_path(@post.id), method: :get do |f| %>
+          <div class="form-group d-flex flex-wrap overflow-auto">
+            <%= f.collection_check_boxes :tag_ids, @tags, :id, :name, class:'form-control' do |b| %>
+                <div class="flex-fill border border-secondary px-1 pt-1">
+                  <%= b.label { b.check_box + b.text }%>
+                </div>
+            <% end %>
+          </div>
+          <div class="form-group text-right">
+            <%= f.submit 'プレビューに進む', class:'btn btn-info'%>
+          </div>
+        <% end %>
+      </div>
     </div>
     <div class="col-sm-12 col-md-3 col-lg-3">
       <div class="current_tags_selected my-2 border border-secondary">
@@ -26,8 +28,8 @@
           <% end %>
         </div>
       </div>
-      <div class="create_tag mt-2">
-        <%= form_with model:@tag, url: tags_path do |form| %>
+      <div class="tag_form mt-2">
+        <%= form_with model:@tag, url: tags_path, local: false do |form| %>
           <%= form.text_field :name, placeholder: "新規タグ名" %>
           <%= form.hidden_field :user_id, :value => current_user.id %>
           <%= form.hidden_field :is_available, :value => false %>
