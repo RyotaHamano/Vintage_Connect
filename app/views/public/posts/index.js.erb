@@ -1,0 +1,2 @@
+$('#posts_index').html('<%= j(render 'public/posts/item', posts: @posts ) %>');
+$('#index_page').html('<%= j(paginate @posts) %>');
