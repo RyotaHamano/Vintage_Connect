@@ -15,12 +15,13 @@
       <%= render 'public/users/user', user: current_user%>
     </div>
     <div class="col-sm-12 col-md-6 col-lg-6">
-      <%= render 'public/posts/item', posts: @posts %>
+      <div id="posts_tag"><%= render 'public/posts/item', posts: @posts %></div>
+      <div id="tag_page"><%= paginate @posts %></div>
     </div>
     <div class="col-sm-12 col-md-3 col-lg-3">
       <div class="sort_narrow border border-secondary border-3">
         <div class="text-center bg-dark text-white py-2">絞り込み・並び替え</div>
-        <%= form_with url: search_tags_path, method: :get do |f| %>
+        <%= form_with url: search_tags_path, method: :get, local: false do |f| %>
           <div class="sort px-2 pt-2">
             <%= f.label :sort_rule, '並び替え：'%>
             <%= f.select :sort_rule, [["新しい順", 0],["古い順", 1],["評価が高い順", 2],["いいねが多い順", 3]], class:'form-control'%>

@@ -1,0 +1,2 @@
+$('#posts_tag').html('<%= j(render 'public/posts/item', posts: @posts ) %>');
+$('#tag_page').html('<%= j(paginate @posts) %>');

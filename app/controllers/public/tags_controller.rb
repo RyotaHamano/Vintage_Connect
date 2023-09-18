@@ -24,7 +24,7 @@ class Public::TagsController < ApplicationController
     if params[:prefecture].present?
       @posts = @posts.where(prefecture: params[:prefecture])
     end
-    @posts = Kaminari.paginate_array(@posts).page(params[:page])
+    @posts = @posts.page(params[:page])
   end
   
   def create

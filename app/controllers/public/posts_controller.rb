@@ -14,26 +14,25 @@ class Public::PostsController < ApplicationController
     if params[:prefecture].present?
       @posts = @posts.where(prefecture: params[:prefecture])
     end
-    @posts = Kaminari.paginate_array(@posts).page(params[:page])
+    @posts = @posts.page(params[:page])
   end
   
   def search
-    if params[:sort_rule].present?
-      @posts = Post.where(reading_status: false).ordered_sort(params[:sort_rule])
-    else
-      @posts = Post.where(reading_status: false).order(id: :desc)
-    end
     if params[:shop_name].present?
       session[:shop_name] = params[:shop_name]
     end
-    @posts = Post.where(reading_status: false).where("shop_name LIKE?", "%#{session[:shop_name]}%")
+    if params[:sort_rule].present?
+      @posts = Post.where(reading_status: false).where("shop_name LIKE?", "%#{session[:shop_name]}%").ordered_sort(params[:sort_rule])
+    else
+      @posts = Post.where(reading_status: false).where("shop_name LIKE?", "%#{session[:shop_name]}%").order(id: :desc)
+    end
     if params[:shop_genre].present?
       @posts = @posts.where(shop_genre: params[:shop_genre])
     end
     if params[:prefecture].present?
       @posts = @posts.where(prefecture: params[:prefecture])
     end
-    @posts = Kaminari.paginate_array(@posts).page(params[:page])
+    @posts = @posts.page(params[:page])
   end
   
   def new

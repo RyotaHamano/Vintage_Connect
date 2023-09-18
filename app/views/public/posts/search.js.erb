@@ -1,0 +1,2 @@
+$('#posts_search').html('<%= j(render 'public/posts/item', posts: @posts ) %>');
+$('#search_page').html('<%= j(paginate @posts) %>');

@@ -32,7 +32,11 @@ class Post < ApplicationRecord
     elsif rule == "2"
       order(rate: :desc)
     elsif rule == "3"
-      where(reading_status: false).sort{|a,b| b.favorites.size <=> a.favorites.size }
+      #.sort{|a,b| b.favorites.size <=> a.favorites.size }
+      left_joins(:favorites)
+             .select('posts.*, COUNT(favorites.id) AS favorites_count')
+             .group('posts.id')
+             .order('favorites_count DESC')
     end
   end
   
