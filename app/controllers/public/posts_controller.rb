@@ -111,6 +111,7 @@ class Public::PostsController < ApplicationController
     session.delete(:new_post) #セッション削除
     session.delete(:tag_ids)
     session.delete(:temporary_image_pathes)
+    flash[:notice] = "投稿を作成しました"
     redirect_to post_path(@post.id)
   end
 
@@ -208,12 +209,14 @@ class Public::PostsController < ApplicationController
     session.delete(:post_params)
     session.delete(:new_tag_ids)
     session.delete(:temporary_image_pathes)
+    flash[:notice] = "投稿を編集しました"
     redirect_to post_path(@post.id)
   end
   
   def destroy
     @post = Post.find(params[:id])
     @post.destroy
+    flash[:notice] = "投稿を削除しました"
     redirect_to user_path(current_user.id)
   end
   

@@ -39,6 +39,7 @@ class Admin::PostsController < ApplicationController
     post_item.save
     user.number_of_deleted_posts += 1
     user.save
+    flash[:notice] = "閲覧制限しました"
     redirect_to admin_posts_path
   end
   
