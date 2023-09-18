@@ -4,7 +4,7 @@ class Post < ApplicationRecord
   validates :shop_name, presence: true
   validates :prefecture, presence: true
   validates :address, presence: true
-  validates :review, presence: true, length:{maximum: 200}
+  validates :review, presence: true, length:{maximum: 400}
   validates :rate, presence: true
   
   has_many_attached :post_images
@@ -22,6 +22,18 @@ class Post < ApplicationRecord
                     nagasaki: 41, kumamoto: 42, oita: 43, miyazaki: 44, kagoshima: 45, okinawa: 46}
   
   enum shop_genre: {old_clothing: 0, old_item: 1, old_tool: 2, old_interior: 3, antique: 4}
+  
+  def self.ordered_sort(rule)
+    if rule == "0"
+      order(id: :desc)
+    elsif rule == "1"
+      order(id: :asc)
+    elsif rule == "2"
+      order(rate: :desc)
+    elsif rule == "3"
+      where(reading_status: false).sort{|a,b| b.favorites.size <=> a.favorites.size }
+    end
+  end
   
   
 end

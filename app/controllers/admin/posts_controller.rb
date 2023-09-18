@@ -2,7 +2,11 @@ class Admin::PostsController < ApplicationController
   before_action :authenticate_admin!
   
   def index
-    @posts = Post.all
+    if params[:sort_rule].present?
+      @posts = Post.all.ordered_sort(params[:sort_rule])
+    else
+      @posts = Post.all.order(id: :desc)
+    end
     if params[:reading_status].present?
       @posts = @posts.where(reading_status: params[:reading_status])
     end
@@ -12,17 +16,8 @@ class Admin::PostsController < ApplicationController
     if params[:prefecture].present?
       @posts = @posts.where(prefecture: params[:prefecture])
     end
-    if params[:sort_rule] == "0"
-      @posts = @posts.order(id: :desc)
-    elsif params[:sort_rule] == "1"
-      @posts = @posts.order(id: :asc)
-    elsif params[:sort_rule] == "2"
-      @posts = @posts.order(rate: :desc)
-    elsif params[:sort_rule] == "3"
-      @posts = @posts.includes(:favorites).sort{|a,b| b.favorites.size <=> a.favorites.size }
-    end
     if @posts.count >= 5
-      @posts = @posts.page(params[:page])
+      @posts = Kaminari.paginate_array(@posts).page(params[:page])
     end
   end
   
