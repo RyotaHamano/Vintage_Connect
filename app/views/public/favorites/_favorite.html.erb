@@ -1,0 +1,5 @@
+<% if current_user.favorites.exists?(post_id: post_item.id) %>
+  <%= link_to post_favorites_path(post_item.id), method: :delete, remote: true do %><i class=" text-light display-5 fa-solid fa-heart">お気に入り削除</i><% end %>
+<% else %>
+  <%= link_to post_favorites_path(post_item.id), method: :post, remote: true do %><i class="text-light display-5 fa-regular fa-heart">お気に入り登録</i><% end %>
+<% end %>

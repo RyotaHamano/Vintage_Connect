@@ -13,6 +13,9 @@
           <div class="prefecture border border-light mx-2 px-2"><%= @post.prefecture_i18n %></div>
           <div class="rate border border-light text-warning px-2"><i class="fa-regular fa-star"></i><%= @post.rate %></div>
           <div class="border border-light ml-2 px-2"><%= @post.created_at.strftime('%Y/%m/%d')%></div>
+          <div class="ml-auto px-3" id="favorite_btn_<%= @post.id %>">
+            <%= render 'public/favorites/favorite', post_item: @post %>
+          </div>
         </div>
         <div class="post_main">
           <div class="post_main_header d-flex align-items-center　justify-content-between my-2">
@@ -41,13 +44,6 @@
                 <div class="swiper-pagination"></div>
                 <div class="swiper-button-prev"></div>
                 <div class="swiper-button-next"></div>
-              </div>
-              <div class="text-warning text-right">
-                <% if current_user.favorites.exists?(post_id: @post.id) %>
-                  <%= link_to post_favorites_path(@post.id), method: :delete do %><i class="fa-solid fa-heart"></i><% end %>
-                <% else %>
-                  <%= link_to post_favorites_path(@post.id), method: :post do %><i class="fa-regular fa-heart"></i><% end %>
-                <% end %>
               </div>
             </div>
             <div class="post_main_review col-sm-12 col-md-4 col-lg-4 text-left">

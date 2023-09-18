@@ -6,9 +6,9 @@ class User < ApplicationRecord
          
   validates :name, presence: true
   
-         
   has_one_attached :user_image
   
+  # プロフィール画像取得メソッド
   def get_user_image(width,height)
     unless user_image.attached?
       file_path = Rails.root.join('app/assets/images/sample.jpg')
@@ -30,6 +30,7 @@ class User < ApplicationRecord
   
   GUEST_USER_EMAIL = "guest@example.com"
   
+  # ゲストログイン用アカウント作成
   def self.guest
     find_or_create_by!(email: GUEST_USER_EMAIL) do |user|
       user.password = SecureRandom.urlsafe_base64
@@ -37,14 +38,17 @@ class User < ApplicationRecord
     end
   end
   
+  # ゲストユーザー判別
   def guest_user?
     email == GUEST_USER_EMAIL
   end
   
+  # フォロー有無確認
   def follow?(user)
     follow_user.include?(user)
   end
   
+  # 優良ユーザー判別
   def green?
     posts = self.number_of_deleted_posts
     comments = self.number_of_deleted_comments
@@ -52,6 +56,7 @@ class User < ApplicationRecord
     return true if (self.is_admission == false) && (posts <= 3) && (comments <= 5) && (tags <= 5)
   end
   
+  # 注意ユーザー判別
   def yellow?
     posts = self.number_of_deleted_posts
     comments = self.number_of_deleted_comments
@@ -59,6 +64,7 @@ class User < ApplicationRecord
     return true if (self.is_admission == false) && ((posts <= 6) && (comments <= 10) && (tags <= 10))
   end
   
+  # 要注意ユーザー判別
   def red?
     posts = self.number_of_deleted_posts
     comments = self.number_of_deleted_comments
@@ -66,6 +72,7 @@ class User < ApplicationRecord
     return true if (self.is_admission == false) && ((posts <= 9) && (comments <= 15) && (tags <= 15))
   end
   
+  # 削除待ちユーザー判別
   def gray?
     posts = self.number_of_deleted_posts
     comments = self.number_of_deleted_comments
@@ -73,6 +80,7 @@ class User < ApplicationRecord
     return true if (self.is_admission == false) && ((posts >= 10) || (comments >= 16) || (tags <= 16))
   end
   
+  # 削除済ユーザー判別
   def black?
     return true if self.is_admission == true
   end

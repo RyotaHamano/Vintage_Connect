@@ -44,7 +44,7 @@ class Admin::UsersController < ApplicationController
       @users = @users.sort{|a,b| b.tags.size <=> a.tags.size }
     end
     if @users.count >= 5
-      @users = @users.page(params[:page])
+      @users = Kaminari.paginate_array(@users).page(params[:page])
     end
   end
 

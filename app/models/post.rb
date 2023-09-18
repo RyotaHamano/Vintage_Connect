@@ -23,6 +23,7 @@ class Post < ApplicationRecord
   
   enum shop_genre: {old_clothing: 0, old_item: 1, old_tool: 2, old_interior: 3, antique: 4}
   
+  # 並べ替え
   def self.ordered_sort(rule)
     if rule == "0"
       order(id: :desc)
