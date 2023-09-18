@@ -1,0 +1,6 @@
+if ($('.follow_btn').hasClass('post_show')){
+  $('.follow_btn').html('<%= j(render 'public/relations/follow_btn', user: @user) %>');
+}else if ($('.follow_btn').hasClass('follow')){
+  $('#follow_<%= @user.id %>').html('<%= j(render 'public/relations/follow_btn', user: @user) %>');
+  
+}else if
