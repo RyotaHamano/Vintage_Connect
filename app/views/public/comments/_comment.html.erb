@@ -1,0 +1,45 @@
+<% comments.each do |comment| %>
+  <div class="comment_item border border-secondary d-flex">
+    <div class="image"><%= image_tag comment.user.get_user_image(60, 60) %></div>
+    <div class="comment_body">
+      <%= link_to user_path(comment.user.id), class:'text-dark' do %>
+        <%= comment.user.name %><br>
+      <% end %>
+      　<%= comment.text %>
+    </div>
+    <div class="align-items-center ml-auto">
+      <% if current_user.id == comment.user.id %>
+        <%= link_to '削除', post_comment_path(post_item.id, comment.id), method: :delete, remote: true, class:'btn btn-danger' %>
+      <% end %>
+    </div>
+  </div>
+  <div class="replies">
+    <% comment.replies.each do |reply| %>
+      <div class="reply_item ml-5 border d-flex">
+        <div class="image">
+          <%= image_tag reply.user.get_user_image(50,50) %>
+        </div>
+        <div class="reply_body">
+          <%= link_to user_path(reply.user.id), class:'text-dark' do %>
+            <%= reply.user.name %><br>
+          <% end %>
+          　<%= reply.text %>
+        </div>
+        <div class="align-items-center ml-auto">
+          <% if current_user.id == reply.user.id %>
+            <%= link_to '削除', post_comment_path(post_item.id, reply.id), method: :delete, remote: true, class:'btn btn-danger' %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+  <div class="reply_form form-group ml-5">
+    <%= form_with model: reply, url: post_comments_path(post_item.id), local: false, class:'d-flex' do |f| %>
+      <%= f.text_field :text, placeholder:'リプライ', class:'form-control ' %>
+      <%= f.hidden_field :post_id, :value => post_item.id %>
+      <%= f.hidden_field :top_parent_id, :value => comment.id %>
+      <%= f.hidden_field :user_id, :value => current_user.id %>
+      <%= f.submit '返信する', class:'btn btn-warning' %>
+    <%end %>
+  </div>
+<% end %>

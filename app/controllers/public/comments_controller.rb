@@ -6,14 +6,18 @@ class Public::CommentsController < ApplicationController
     @post = Post.find(params[:post_id])
     comment = Comment.new(comment_params)
     comment.save
-    redirect_to post_path(@post.id)
+    @comments = @post.comments.where(reading_status: false)
+    @comment = Comment.new
+    @reply = Comment.new
   end
   
   def destroy
     @post = Post.find(params[:post_id])
     comment = Comment.find(params[:id])
     comment.destroy
-    redirect_to post_path(@post.id)
+    @comments = @post.comments.where(reading_status: false)
+    @comment = Comment.new
+    @reply = Comment.new
   end
   
   private

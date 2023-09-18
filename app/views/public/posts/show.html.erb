@@ -83,58 +83,11 @@
         </div>
       </div>
       <div class="comments my-2 overflow-auto">
-        <% @comments.each do |comment| %>
-          <div class="comment_item border border-secondary d-flex">
-            <div class="image"><%= image_tag comment.user.get_user_image(60, 60) %></div>
-            <div class="comment_body">
-              <%= link_to user_path(comment.user.id), class:'text-dark' do %>
-                <%= comment.user.name %><br>
-              <% end %>
-              　<%= comment.text %>
-            </div>
-            <div class="align-items-center ms-auto">
-              <% if current_user.id == comment.user.id %>
-                <%= link_to '削除', post_comment_path(@post.id, comment.id), method: :delete, class:'btn btn-danger' %>
-              <% end %>
-            </div>
-          </div>
-          <div class="replies">
-            <% comment.replies.each do |reply| %>
-              <div class="reply_item ml-5 border d-flex">
-                <div class="image">
-                  <%= image_tag reply.user.get_user_image(50,50) %>
-                </div>
-                <div class="reply_body">
-                  <%= link_to user_path(reply.user.id), class:'text-dark' do %>
-                    <%= reply.user.name %><br>
-                  <% end %>
-                  　<%= reply.text %>
-                </div>
-                <div class="align-items-center">
-                  <% if current_user.id == reply.user.id %>
-                    <%= link_to '削除', post_comment_path(@post.id, reply.id), method: :delete, class:'btn btn-danger' %>
-                  <% end %>
-                </div>
-              </div>
-            <% end %>
-          </div>
-          <div class="reply_form form-group ml-5">
-            <%= form_with model: @reply, url: post_comments_path(@post.id), class:'d-flex' do |f| %>
-              <%= f.text_field :text, placeholder:'リプライ', class:'form-control ' %>
-              <%= f.hidden_field :post_id, :value => @post.id %>
-              <%= f.hidden_field :top_parent_id, :value => comment.id %>
-              <%= f.hidden_field :user_id, :value => current_user.id %>
-              <%= f.submit '返信する', class:'btn btn-warning' %>
-            <%end %>
-          </div>
-        <% end %>
-        <div class="new_comment form-group">
-          <%= form_with model: @comment, url: post_comments_path(@post.id), class:'d-flex' do |form| %>
-            <%= form.text_field :text, placeholder:'コメント', class:'form-control' %>
-            <%= form.hidden_field :post_id, :value => @post.id %>
-            <%= form.hidden_field :user_id, :value => current_user.id %>
-            <%= form.submit 'コメントする', class:'btn btn-warning' %>
-          <% end %>
+        <div id="comment">
+          <%= render 'public/comments/comment', comments: @comments, post_item: @post, reply: @reply %>
+        </div>
+        <div id="comment_form" class="form-group">
+          <%= render 'public/comments/form', comment: @comment, post_item: @post %>
         </div>
       </div>
     </div>

@@ -80,7 +80,7 @@
               <% end %>
               <%= comment.text %>
             </div>
-            <div class="align-items-center ms-auto">
+            <div class="align-items-center ml-auto">
               <%= link_to '制限', admin_restrict_viewing_comment_path(@post.id, comment.id), method: :patch, class:'btn btn-danger' %>
             </div>
           </div>
