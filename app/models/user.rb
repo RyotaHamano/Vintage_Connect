@@ -77,7 +77,7 @@ class User < ApplicationRecord
     posts = self.number_of_deleted_posts
     comments = self.number_of_deleted_comments
     tags = self.number_of_deleted_tags
-    return true if (self.is_admission == false) && ((posts >= 10) || (comments >= 16) || (tags <= 16))
+    return true if (self.is_admission == false) && ((posts >= 10) || (comments >= 16) || (tags >= 16))
   end
   
   # 削除済ユーザー判別

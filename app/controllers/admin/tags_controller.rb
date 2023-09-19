@@ -18,7 +18,10 @@ class Admin::TagsController < ApplicationController
     user.number_of_deleted_tags += 1
     user.save
     tag.taggings.destroy_all
-    redirect_to request.referer
+    @tags = Tag.where(is_available: false).order(id: :desc)
+    @disabled_tags = Tag.where(is_available: true).order(id: :desc)
+    @user_tags = user.tags.where(is_available: false).order(id: :desc)
+    @user_disabled_tags = user.tags.where(is_available: true).order(id: :desc)
   end
   
   private

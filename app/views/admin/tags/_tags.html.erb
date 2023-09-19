@@ -1,0 +1,7 @@
+<% tags.each do |tag| %>
+    <div class="px-1 bg-danger mr-1 mb-1">
+      <%= link_to disable_admin_tag_path(tag.id), method: :patch, remote: true, data: { confirm: "使用不可にします" }, class:'text-light' do %>
+        <%= tag.name %>
+      <% end %>
+    </div>
+<% end %>

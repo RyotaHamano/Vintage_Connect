@@ -1,0 +1,7 @@
+if ($('#tags').hasClass('user')){
+  $('#tags').html('<%= j(render 'admin/tags/user_tags', tags: @user_tags) %>');
+  $('#disabled_tags').html('<%= j(render 'admin/tags/user_disabled_tags', disabled_tags: @user_disabled_tags) %>');
+}else{
+  $('#tags').html('<%= j(render 'admin/tags/tags', tags: @tags) %>');
+  $('#disabled_tags').html('<%= j(render 'admin/tags/disabled_tags', disabled_tags: @disabled_tags) %>');
+}

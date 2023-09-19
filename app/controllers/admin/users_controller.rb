@@ -1,5 +1,6 @@
 class Admin::UsersController < ApplicationController
   before_action :authenticate_admin!
+  before_action :admin_ensure_guest_user, only: [:show, :withdraw]
   
   def index
     @users = User.where(is_admission: false).where.not(email: "guest@example.com")
@@ -51,8 +52,8 @@ class Admin::UsersController < ApplicationController
     @posts = @user.posts.all.order(id: :desc)
     @comments = @user.comments.where(reading_status: false)
     @deleted_comments = @user.comments.where(reading_status: true)
-    @tags = @user.tags.where(is_available: false)
-    @disabled_tags = @user.tags.where(is_available: true)
+    @tags = @user.tags.where(is_available: false).order(id: :desc)
+    @disabled_tags = @user.tags.where(is_available: true).order(id: :desc)
     if params[:reading_status] == "0"
       @posts = @posts.where(reading_status: false)
     elsif params[:reading_status] == "1"
@@ -69,10 +70,6 @@ class Admin::UsersController < ApplicationController
   # 強制退会処理（投稿＆コメント全削除）
   def withdraw
     @user = User.find(params[:id])
-    if @user.email == "guest@example.com"
-      flash[:notice] = "ゲストアカウントは削除不可です"
-      redirect_to request.referer
-    end
     posts = @user.posts.where(reading_status: false)
     comments = @user.comments.where(reading_status: false)
     @user.update(is_admission: true)

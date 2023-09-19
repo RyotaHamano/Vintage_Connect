@@ -93,18 +93,12 @@
       </div>
       <div class="tags border border-secondary border-3">
         <div class="text-center bg-dark text-light mb-1"><span>有効タグ</span></div>
-        <div class="able d-flex flex-wrap overflow-auto">
-          <% @tags.each do |tag| %>
-            <%= link_to disable_admin_tag_path(tag.id), method: :patch, data: { confirm: "使用不可にします" } do %>
-              <div class="border rounded bg-danger text-white px-2"><%= tag.name %></div>
-            <% end %>
-          <% end %>
+        <div id="tags" class="able user d-flex flex-wrap overflow-auto">
+          <%= render 'admin/tags/user_tags', tags: @tags %>
         </div>
         <div class="text-center bg-dark text-light mb-1"><p>削除済タグ</p></div>
-        <div class="disabled d-flex flex-wrap align-items-start overflow-auto">
-          <% @disabled_tags.each do |d_tag| %>
-            <div class="border rounded bg-dark text-white px-2"><%= d_tag.name %></div>
-          <% end %>
+        <div id="disabled_tags" class="disabled d-flex flex-wrap align-items-start overflow-auto">
+          <%= render 'admin/tags/user_disabled_tags', disabled_tags: @disabled_tags %>
         </div>
       </div>
     </div>

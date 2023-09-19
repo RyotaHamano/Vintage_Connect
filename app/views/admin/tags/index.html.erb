@@ -9,24 +9,14 @@
       </div>
       <div class="border mb-2">
         <h3>使用可能タグ</h3>
-        <div class="tags d-flex flex-wrap align-items-center">
-          <% @tags.each do |tag| %>
-              <div class="px-1 bg-danger mr-1 mb-1">
-                <%= link_to disable_admin_tag_path(tag.id), method: :patch, data: { confirm: "使用不可にします" }, class:'text-light' do %>
-                  <%= tag.name %>
-                <% end %>
-              </div>
-          <% end %>
+        <div id="tags" class="tags d-flex flex-wrap align-items-center">
+          <%= render 'admin/tags/tags', tags: @tags %>
         </div>
       </div>
       <div class="border">
         <h3>使用不可タグ</h3>
-        <div class="tags d-flex flex-wrap align-items-center">
-          <% @disabled_tags.each do |tag| %>
-              <div class="px-1 bg-dark mr-1 mb-1 text-light">
-                <%= tag.name %>
-              </div>
-          <% end %>
+        <div id="disabled_tags" class="tags d-flex flex-wrap align-items-center">
+          <%= render 'admin/tags/disabled_tags', disabled_tags: @disabled_tags %>
         </div>
       </div>
     </div>
