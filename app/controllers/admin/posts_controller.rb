@@ -26,14 +26,12 @@ class Admin::PostsController < ApplicationController
   end
   
   def restrict_viewing
-    post_item = Post.find(params[:id])
-    user = post_item.user
-    post_item.reading_status = true
-    post_item.save
+    @post = Post.find(params[:id])
+    user = @post.user
+    @post.reading_status = true
+    @post.save
     user.number_of_deleted_posts += 1
     user.save
-    flash[:notice] = "閲覧制限しました"
-    redirect_to admin_posts_path
   end
   
 end

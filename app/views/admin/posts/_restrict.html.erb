@@ -1,0 +1,5 @@
+<% if post_item.reading_status == false %>
+  <%= link_to '制限する', restrict_viewing_admin_post_path(post_item.id), method: :patch, remote: true, data: { confirm: "よろしいですか？" }, class:'btn btn-danger px-5' %>
+<% else %>
+  <span class="text-white bg-dark px-2 py-2 rounded">制限されています</span>
+<% end %>
