@@ -16,9 +16,7 @@ class Admin::PostsController < ApplicationController
     if params[:prefecture].present?
       @posts = @posts.where(prefecture: params[:prefecture])
     end
-    if @posts.count >= 5
-      @posts = Kaminari.paginate_array(@posts).page(params[:page])
-    end
+    @posts = @posts.page(params[:page])
   end
   
   def show

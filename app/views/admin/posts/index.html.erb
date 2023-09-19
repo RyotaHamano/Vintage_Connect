@@ -1,21 +1,13 @@
 <div class="container">
   <div class="row">
     <div class="col-sm-12 col-md-8 col-lg-8 my-2">
-      <% @posts.each do |post_item| %>
-        <% if post_item.reading_status == false %>
-          <%= render 'admin/posts/item', post_item: post_item %>
-        <% elsif post_item.reading_status == true %>
-          <%= render 'admin/posts/deleted', post_item: post_item %>
-        <% end %>
-      <% end %>
-      <% if @posts.count >= 5 %>
-        <%= paginate @posts %>
-      <% end %>
+      <div id="admin_posts_index"><%= render 'admin/posts/index', posts: @posts %></div>
+      <div id="admin_posts_page"><%= render 'admin/posts/page', posts: @posts %></div>
     </div>
     <div class="col-sm-12 col-md-4 col-lg-4 my-2">
       <div class="sort_narrow border border-secondary border-3">
         <div class="text-center bg-dark text-white py-2">絞り込み・並び替え</div>
-        <%= form_with url: admin_posts_path, method: :get do |f| %>
+        <%= form_with url: admin_posts_path, method: :get, local: false do |f| %>
           <div class="sort px-2 pt-2 border-bottom border-secondary">
             <%= f.label :sort_rule, '並び替え：'%>
             <%= f.select :sort_rule, [["新しい順", 0],["古い順", 1],["評価が高い順", 2],["いいねが多い順", 3]], class:'form-control'%>

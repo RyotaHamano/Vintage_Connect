@@ -1,0 +1,7 @@
+<% posts.each do |post_item| %>
+  <% if post_item.reading_status == false %>
+    <%= render 'admin/posts/item', post_item: post_item %>
+  <% elsif post_item.reading_status == true %>
+    <%= render 'admin/posts/deleted', post_item: post_item %>
+  <% end %>
+<% end %>
