@@ -72,7 +72,7 @@
                 </li>
               <% end %>
               <% if @user.id != current_user.id %>
-              <div class="follow_btn post_show"><%= render 'public/relations/follow_btn', user: @user %></div>
+              <div id="follow_btn" class="post_show"><%= render 'public/relations/follow_btn', user: @user %></div>
               <% end %>
             </ul>
           </div>

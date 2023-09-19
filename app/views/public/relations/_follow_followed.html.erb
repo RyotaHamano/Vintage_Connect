@@ -1,0 +1,2 @@
+<%= link_to follow_user_path(user.id), class:'btn btn-dark my-2' do %><%= user.follow_user.count %>フォロー<% end %>
+<%= link_to followed_user_path(user.id), class:'btn btn-dark my-2' do %><%= user.followed_user.count %>フォロワー<% end %>

@@ -1,0 +1,11 @@
+if ($('#follow_btn').hasClass('post_show')){
+  $('#follow_btn').html('<%= j(render 'public/relations/follow_btn', user: @follow_user) %>');
+}else if ($('#user').hasClass('user_<%= current_user.id %>')){
+  $('#follow_<%= @follow_user.id %>').html('<%= j(render 'public/relations/follow_btn', user: @follow_user) %>');
+  $('#follow_followed').html('<%= j(render 'public/relations/follow_followed', user: current_user) %>');
+}else if ($('#follow_btn').hasClass('follow')){
+  $('#follow_<%= @follow_user.id %>').html('<%= j(render 'public/relations/follow_btn', user: @follow_user) %>');
+}else {
+  $('#follow_btn_<%= @follow_user.id %>').html('<%= j(render 'public/relations/follow_btn', user: @follow_user ) %>');
+  $('#follow_followed').html('<%= j(render 'public/relations/follow_followed', user: @follow_user) %>');
+}

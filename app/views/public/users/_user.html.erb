@@ -1,4 +1,4 @@
-<div class="user_show border border-secondary border-2 py-2 px-2">
+<div id="user" class="user_<%= user.id %> user_show border border-secondary border-2 py-2 px-2">
   <div class="user_top d-flex align_items_stretch">
     <div class="d-flex align-items-center"><%= image_tag user.get_user_image(100,100) %></div>
     <div class="user_name_favorite flex-fill text-center">
@@ -15,9 +15,8 @@
       <strong>自己紹介</strong><br>
       <%= user.introduction %>
     </li>
-    <li class="list-group-item text-center">
-      <%= link_to follow_user_path(user.id), class:'btn btn-dark my-2' do %><%= user.follow_user.count %>フォロー<% end %>
-      <%= link_to followed_user_path(user.id), class:'btn btn-dark my-2' do %><%= user.followed_user.count %>フォロワー<% end %>
+    <li id="follow_followed" class="list-group-item text-center">
+      <%= render 'public/relations/follow_followed', user: user %>
     </li>
   </ul>
   <div class="text-center">
@@ -26,7 +25,7 @@
       <%= link_to '投稿する', new_post_path, class:'btn btn-info my-2' %>
       <%= link_to 'お気に入りした投稿', favorites_user_path(user.id), class:'btn btn-info my-2'%>
     <% else %>
-      <div class="follow_btn"><%= render 'public/relations/follow_btn', user: user %></div>
+      <div id="follow_btn_<%= user.id %>"><%= render 'public/relations/follow_btn', user: user %></div>
     <% end %>
   </div>
 </div>

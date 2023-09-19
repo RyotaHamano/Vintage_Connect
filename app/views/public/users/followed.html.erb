@@ -20,7 +20,7 @@
                   </li>
                 <% end %>
                 <% if user.id != current_user.id %>
-                  <%= render 'public/relations/follow_btn', user: user %>
+                  <div class="follow" id="follow_<%= user.id %>"><%= render 'public/relations/follow_btn', user: user %></div>
                 <% end %>
               </ul>
             </div>
