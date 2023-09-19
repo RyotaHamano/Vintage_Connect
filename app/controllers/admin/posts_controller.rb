@@ -22,7 +22,7 @@ class Admin::PostsController < ApplicationController
   def show
     @post = Post.find(params[:id])
     @user = @post.user
-    @comments = @post.comments.where(reading_status: false, top_parent_id: nil)
+    @comments = @post.comments.where(reading_status: false)
   end
   
   def restrict_viewing

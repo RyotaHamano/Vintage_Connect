@@ -1,0 +1,32 @@
+<% comments.each do |comment| %>
+  <div class="comment_item border border-secondary d-flex mt-1">
+    <div class="image"><%= image_tag comment.user.get_user_image(60, 60) %></div>
+    <div class="comment_body">
+      <%= link_to admin_user_path(comment.user.id), class:'text-dark' do %>
+        <%= comment.user.name %><br>
+      <% end %>
+      <%= comment.text %>
+    </div>
+    <div class="align-items-center ml-auto">
+      <%= link_to '強制削除', admin_restrict_viewing_comment_path(post_item.id, comment.id), method: :patch, remote: true, class:'btn btn-danger' %>
+    </div>
+  </div>
+  <div class="replies">
+    <% comment.replies.where(reading_status: false).each do |reply| %>
+      <div class="reply_item ml-5 border d-flex">
+        <div class="image">
+          <%= image_tag reply.user.get_user_image(50,50) %>
+        </div>
+        <div class="reply_body">
+          <%= link_to admin_user_path(reply.user.id), class:'text-dark' do %>
+            <%= reply.user.name %>
+          <% end %>
+          <%= reply.text %>
+        </div>
+        <div class="align-items-center">
+          <%= link_to '強制削除', admin_restrict_viewing_comment_path(post_item.id, reply.id), method: :patch, remote: true, class:'btn btn-danger' %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

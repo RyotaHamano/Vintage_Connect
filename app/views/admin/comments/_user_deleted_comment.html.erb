@@ -1,0 +1,12 @@
+<% deleted_comments.each do |d_comment| %>
+  <div class="border border-light bg-dark text-light mb-1">
+    <%= link_to admin_post_path(d_comment.post.id), class:'text-light' do %>投稿：<%= d_comment.post.shop_name %><% end %>
+    <% if d_comment.top_parent_id == nil %>
+      <span>(親コメ)</span>
+    <% else %>
+      <span>(リプ)</span>
+    <% end %>
+    <br>
+    <%= d_comment.text %>
+  </div>
+<% end %>

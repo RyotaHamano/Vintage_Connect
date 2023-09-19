@@ -1,0 +1,13 @@
+<% comments.each do |comment| %>
+  <div class="border mb-1 mx-1">
+    <%= link_to admin_post_path(comment.post.id), class:'text-dark' do %><strong>投稿：<%= comment.post.shop_name %></strong><% end %>
+    <% if comment.top_parent_id == nil %>
+      <span>(親コメ)</span>
+    <% else %>
+      <span>(リプ)</span>
+    <% end %>
+    <br>
+    <%= comment.text %>
+    <%= link_to '強制削除', admin_restrict_viewing_comment_path(comment.post.id, comment.id), method: :patch, remote: true, data: { confirm: "親コメントの場合リプライはすべて削除されます。よろしいですか？" }, class:'btn btn-danger'%>
+  </div>
+<% end %>
