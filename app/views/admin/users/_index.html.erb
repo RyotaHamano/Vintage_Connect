@@ -1,0 +1,13 @@
+<% users.each do |user| %>
+  <% if user.green? %>
+    <%= render 'admin/users/green', user: user %>
+  <% elsif user.yellow? %>
+    <%= render 'admin/users/yellow', user: user %>
+  <% elsif user.red? %>
+    <%= render 'admin/users/red', user: user %>
+  <% elsif user.gray? %>
+    <%= render 'admin/users/gray', user: user %>
+  <% elsif user.black?  %>
+    <%= render 'admin/users/black', user: user %>
+  <% end %>
+<% end %>
