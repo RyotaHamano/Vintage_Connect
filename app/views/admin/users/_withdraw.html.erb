@@ -1,0 +1,5 @@
+<% if user.is_admission == false %>
+  <div class="text-center mb-2"><%= link_to '強制退会', withdraw_admin_user_path(user.id), method: :patch, remote: true, data: { confirm: "よろしいですか？" }, class:'btn btn-danger px-5' %></div>
+<% else %>
+  <div class="text-light text-center bg-dark mb-2 py-3">強制退会 済</div>
+<% end %>

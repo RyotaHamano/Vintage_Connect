@@ -68,17 +68,20 @@ class Admin::UsersController < ApplicationController
   
   # 強制退会処理（投稿＆コメント全削除）
   def withdraw
-    user = User.find(params[:id])
-    posts = user.posts.where(reading_status: false)
-    comments = user.comments.where(reading_status: false)
-    user.update(is_admission: true)
+    @user = User.find(params[:id])
+    if @user.email == "guest@example.com"
+      flash[:notice] = "ゲストアカウントは削除不可です"
+      redirect_to request.referer
+    end
+    posts = @user.posts.where(reading_status: false)
+    comments = @user.comments.where(reading_status: false)
+    @user.update(is_admission: true)
     posts.each do |post_item|
       post_item.update(reading_status: true)
     end
     comments.each do |comment|
       comment.update(reading_status: true)
     end
-    redirect_to admin_user_path(user.id)
   end
   
 end
