@@ -6,7 +6,7 @@ class Public::CommentsController < ApplicationController
     @post = Post.find(params[:post_id])
     comment = Comment.new(comment_params)
     comment.save
-    @comments = @post.comments.where(reading_status: false)
+    @comments = @post.comments.where(reading_status: false, top_parent_id: nil)
     @comment = Comment.new
     @reply = Comment.new
   end
@@ -15,7 +15,7 @@ class Public::CommentsController < ApplicationController
     @post = Post.find(params[:post_id])
     comment = Comment.find(params[:id])
     comment.destroy
-    @comments = @post.comments.where(reading_status: false)
+    @comments = @post.comments.where(reading_status: false, top_parent_id: nil)
     @comment = Comment.new
     @reply = Comment.new
   end

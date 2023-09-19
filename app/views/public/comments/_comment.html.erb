@@ -14,7 +14,7 @@
     </div>
   </div>
   <div class="replies">
-    <% comment.replies.each do |reply| %>
+    <% comment.replies.where(reading_status: false).each do |reply| %>
       <div class="reply_item ml-5 border d-flex">
         <div class="image">
           <%= image_tag reply.user.get_user_image(50,50) %>
