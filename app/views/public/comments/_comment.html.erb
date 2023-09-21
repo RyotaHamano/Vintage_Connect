@@ -33,13 +33,15 @@
       </div>
     <% end %>
   </div>
-  <div class="reply_form form-group ml-5">
-    <%= form_with model: reply, url: post_comments_path(post_item.id), local: false, class:'d-flex' do |f| %>
-      <%= f.text_field :text, placeholder:'リプライ', class:'form-control ' %>
-      <%= f.hidden_field :post_id, :value => post_item.id %>
-      <%= f.hidden_field :top_parent_id, :value => comment.id %>
-      <%= f.hidden_field :user_id, :value => current_user.id %>
-      <%= f.submit '返信する', class:'btn btn-warning' %>
-    <%end %>
-  </div>
+  <% if current_user.not_guest_user? %>
+    <div class="reply_form form-group ml-5">
+      <%= form_with model: reply, url: post_comments_path(post_item.id), local: false, class:'d-flex' do |f| %>
+        <%= f.text_field :text, placeholder:'リプライ', class:'form-control ' %>
+        <%= f.hidden_field :post_id, :value => post_item.id %>
+        <%= f.hidden_field :top_parent_id, :value => comment.id %>
+        <%= f.hidden_field :user_id, :value => current_user.id %>
+        <%= f.submit '返信する', class:'btn btn-warning' %>
+      <%end %>
+    </div>
+  <% end %>
 <% end %>

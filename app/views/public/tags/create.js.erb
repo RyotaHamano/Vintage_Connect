@@ -1,2 +1,7 @@
-$('.tags_index').html('<%= j(render 'public/tags/index', tags: @tags ) %>')
-$('.tag_form').html('<%= j(render 'public/tags/form', tag: @tag ) %>')
+<% if @render_select == 'edit' %>
+  $('.tags_index').html('<%= j(render 'public/tags/edit_index', tags: @tags, post_item: @post) %>');
+  $('.tag_form').html('<%= j(render 'public/tags/edit_form', tag: @tag, post_item: @post) %>');
+<% else %>
+  $('.tags_index').html('<%= j(render 'public/tags/index', tags: @tags) %>');
+  $('.tag_form').html('<%= j(render 'public/tags/form', tag: @tag) %>');
+<% end %>

@@ -14,4 +14,13 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  def tmp_file_access
+    if session[:temporary_image_pathes].present?
+      @temp_image_pathes = session[:temporary_image_pathes]
+      @temp_image_pathes.each do |image_path| # 一時ファイルからファイルを呼び出しActiveStorageに格納
+        File.open(image_path)
+      end
+    end
+  end
+  
 end

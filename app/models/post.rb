@@ -6,6 +6,7 @@ class Post < ApplicationRecord
   validates :address, presence: true
   validates :review, presence: true, length:{maximum: 400}
   validates :rate, presence: true
+  validate :validate_number_of_files
   
   has_many_attached :post_images
   
@@ -40,5 +41,13 @@ class Post < ApplicationRecord
     end
   end
   
+  FILE_NUMBER_LIMIT = 5
+  
+  private
+  
+  def validate_number_of_files
+    return if post_images.length <= FILE_NUMBER_LIMIT
+    errors.add(:post_images, "に添付できる画像は#{FILE_NUMBER_LIMIT}件までです。")
+  end
   
 end

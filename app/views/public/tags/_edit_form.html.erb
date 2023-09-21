@@ -1,0 +1,7 @@
+<%= form_with model: tag, url: tags_path, local: false do |form| %>
+  <%= form.text_field :name, placeholder: "新規タグ名" %>
+  <%= form.hidden_field :user_id, :value => current_user.id %>
+  <%= form.hidden_field :is_available, :value => false %>
+  <%= form.hidden_field :post_id, :value => post_item.id %>
+  <%= form.submit 'タグを作成', class:'btn btn-info' %>
+<% end %>

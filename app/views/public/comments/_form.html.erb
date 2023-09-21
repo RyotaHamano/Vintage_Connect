@@ -1,6 +1,8 @@
-<%= form_with model: comment, url: post_comments_path(post_item.id), local: false, class:'d-flex' do |form| %>
-  <%= form.text_field :text, placeholder:'コメント', class:'form-control' %>
-  <%= form.hidden_field :post_id, :value => post_item.id %>
-  <%= form.hidden_field :user_id, :value => current_user.id %>
-  <%= form.submit 'コメントする', class:'btn btn-warning' %>
+<% if current_user.not_guest_user? %>
+  <%= form_with model: comment, url: post_comments_path(post_item.id), local: false, class:'d-flex' do |form| %>
+    <%= form.text_field :text, placeholder:'コメント', class:'form-control' %>
+    <%= form.hidden_field :post_id, :value => post_item.id %>
+    <%= form.hidden_field :user_id, :value => current_user.id %>
+    <%= form.submit 'コメントする', class:'btn btn-warning' %>
+  <% end %>
 <% end %>

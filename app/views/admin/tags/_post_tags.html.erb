@@ -1,0 +1,11 @@
+<% post_item.tags.each do |tag| %>
+  <div class="text-light mx-1">
+    <%= form_with url: disable_admin_tag_path(tag.id), method: :patch, local: false, data: { confirm: "使用不可にします" } do |f| %>
+      <div class="text-center">
+        <%= f.hidden_field :id, :value => tag.id %>
+        <%= f.hidden_field :post_id, :value => post_item.id %>
+        <%= f.submit "#{tag.name}", class:'btn btn-danger mb-1' %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

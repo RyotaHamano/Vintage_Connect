@@ -21,7 +21,7 @@ class Admin::UsersController < ApplicationController
       end
     end
     if params[:user_status] == "all"
-      @users = User.all
+      @users = User.where(is_admission: false).where.not(email: "guest@example.com")
     elsif params[:user_status] == "green"
       @users = green_users
     elsif params[:user_status] == "yellow"

@@ -1,11 +1,11 @@
 <div class="container">
   <div class="row">
-    <div class="col-sm-12 col-md-12 col-lg-12 mx-auto">
-      <h3>
+    <div class="col-sm-12 col-md-12 col-lg-12 mx-auto text-center">
+      <h3 class="my-5 py-5">
         退会すると投稿のすべてが削除されます<br>
         本当によろしいですか？
       </h3>
-      <%= link_to '退会する', user_path(@user.id), method: :delete, class:'btn btn-danger'%>
+      <%= link_to '退会する', user_path(@user.id), method: :delete, class:'btn btn-danger my-5 px-5 py-3'%>
     </div>
   </div>
 </div>

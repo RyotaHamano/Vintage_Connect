@@ -1,4 +1,4 @@
-<%= form_with url: preview_posts_path, method: :get do |f| %>
+<%= form_with url: edit_preview_post_path(post_item.id), method: :get do |f| %>
   <div class="form-group d-flex flex-wrap tags_area overflow-auto">
     <%= f.collection_check_boxes :tag_ids, tags, :id, :name, class:'form-control' do |b| %>
         <div class="flex-fill border border-secondary px-1 pt-1">

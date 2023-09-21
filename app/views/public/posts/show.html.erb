@@ -13,9 +13,11 @@
           <div class="prefecture border border-light mx-2 px-2"><%= @post.prefecture_i18n %></div>
           <div class="rate border border-light text-warning px-2"><i class="fa-regular fa-star"></i><%= @post.rate %></div>
           <div class="border border-light ml-2 px-2"><%= @post.created_at.strftime('%Y/%m/%d')%></div>
-          <div class="ml-auto px-3" id="favorite_btn_<%= @post.id %>">
-            <%= render 'public/favorites/favorite', post_item: @post %>
-          </div>
+          <% if current_user.not_guest_user? %>
+            <div class="ml-auto px-3" id="favorite_btn_<%= @post.id %>">
+              <%= render 'public/favorites/favorite', post_item: @post %>
+            </div>
+          <% end %>
         </div>
         <div class="post_main">
           <div class="post_main_header d-flex align-items-center　justify-content-between my-2">
@@ -71,8 +73,10 @@
                   <%= @user.introduction %>
                 </li>
               <% end %>
-              <% if @user.id != current_user.id %>
-              <div id="follow_btn" class="post_show text-right"><%= render 'public/relations/follow_btn', user: @user %></div>
+              <% if current_user.not_guest_user? %>
+                <% if @user.id != current_user.id %>
+                <div id="follow_btn" class="post_show text-right"><%= render 'public/relations/follow_btn', user: @user %></div>
+                <% end %>
               <% end %>
             </ul>
           </div>

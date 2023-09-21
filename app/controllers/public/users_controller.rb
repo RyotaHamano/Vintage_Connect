@@ -1,9 +1,13 @@
 class Public::UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :ensure_guest_user, only: [:edit, :update, :confirm, :destroy]
+  before_action :ensure_guest_user, only: [:edit, :update, :confirm, :destroy, :favorites]
   
   def show
     @user = User.find(params[:id])
+    if @user.guest_user?
+      flash[:notice] = "新規登録・ログインしてください"
+      redirect_to request.referer
+    end
     @posts = @user.posts.where(reading_status: false).order(id: :desc).page(params[:page])
   end
   

@@ -43,6 +43,10 @@ class User < ApplicationRecord
     email == GUEST_USER_EMAIL
   end
   
+  def not_guest_user?
+    email != GUEST_USER_EMAIL
+  end
+  
   # フォロー有無確認
   def follow?(user)
     follow_user.include?(user)
