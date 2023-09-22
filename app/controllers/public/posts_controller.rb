@@ -131,7 +131,7 @@ class Public::PostsController < ApplicationController
       temp_file_dir = Rails.root.join('tmp', 'uploads') # ディレクトリを調整
       FileUtils.mkdir_p(temp_file_dir) # ディレクトリが存在しない場合に作成
       params[:post][:post_images].each_with_index do |image, index| # 受け取った画像データを繰り返し処理で一時ファイルに格納
-        temp_file = Tempfile.new("tempfile_#{index}", temp_file_dir)
+        temp_file = File.open("#{temp_file_dir}/tempfile_#{index}",'w', 0755)
         temp_file.binmode
         temp_file.write(image.read)
         temp_file.rewind
@@ -188,6 +188,7 @@ class Public::PostsController < ApplicationController
           content_type: 'image/jpeg'
           )
         @post.post_images.attach(blob)
+        File.unlink(image_path)
       end
     end
     if session[:tag_ids].present?
@@ -225,25 +226,29 @@ class Public::PostsController < ApplicationController
   def edit_post_params
     params.require(:post).permit(:shop_name, :shop_genre, :prefecture, :address, :review, :rate, :reading_status, :user_id)
   end
-
+  
+  #新規投稿時、フォーム内容が空欄の場合タグ選択に進めない
   def validate_post
     if (params[:post][:shop_name].empty?) || (params[:post][:address].empty?) || (params[:post][:review].empty?) || (params[:post][:post_images] == nil)
       redirect_to request.referer, notice: "店名、住所、画像、本文を入力してください"
     end
   end
-
+  
+  #投稿画像が5枚より多い場合タグ選択に進めない
   def validate_post_images
     if params[:post][:post_images] != nil && params[:post][:post_images].size > 5
       redirect_to request.referer, notice: "画像は5枚までです"
     end
   end
-
+  
+  #選択タグが10個より多い場合プレビューへ進めない
   def validate_post_tags
-    if params[:tag_ids].size > 10
+    if params[:tag_ids].size > 11
       redirect_to request.referer, notice: "タグは10個までです"
     end
   end
 
+  #投稿編集時、フォーム内容が空欄の場合タグ選択に進めない
   def validate_edit_post
     if (params[:post][:shop_name].empty?) || (params[:post][:address].empty?) || (params[:post][:review].empty?)
       redirect_to request.referer, notice: "店名、住所、本文を入力してください"
