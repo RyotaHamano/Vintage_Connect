@@ -31,3 +31,12 @@
 - JSライブラリ：jQuery
 - IDE：Cloud9
 ​
+## 使用素材
+使用Gem
+- 「devise」https://github.com/heartcombo/devise
+- 「kaminari」https://github.com/kaminari/kaminari
+- 「enum_help」https://github.com/zmbacker/enum_help  
+実装機能リスト
+- https://docs.google.com/spreadsheets/d/1VRmHM5G8nnJEaalfh_eP6tZqUyzOMi4Vxn21dEB_HP4/edit?usp=sharing  
+フリー写真として以下を使用
+- 「写真AC」https://www.photo-ac.com/
