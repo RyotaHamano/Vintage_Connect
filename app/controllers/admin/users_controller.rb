@@ -54,15 +54,15 @@ class Admin::UsersController < ApplicationController
     @deleted_comments = @user.comments.where(reading_status: true)
     @tags = @user.tags.where(is_available: false).order(id: :desc)
     @disabled_tags = @user.tags.where(is_available: true).order(id: :desc)
+    if params[:sort_rule] == "0"
+      @posts = @user.posts.all.order(id: :desc)
+    elsif params[:sort_rule] == "1"
+      @posts = @user.posts.all.order(id: :asc)
+    end
     if params[:reading_status] == "0"
       @posts = @posts.where(reading_status: false)
     elsif params[:reading_status] == "1"
       @posts = @posts.where(reading_status: true)
-    end
-    if params[:sort_rule] == "0"
-      @posts = @posts.order(id: :desc)
-    elsif params[:sort_rule] == "1"
-      @posts = @posts.order(id: :asc)
     end
     
   end
