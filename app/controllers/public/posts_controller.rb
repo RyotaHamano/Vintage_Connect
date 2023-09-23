@@ -153,10 +153,10 @@ class Public::PostsController < ApplicationController
     @post = Post.find(params[:id])
     @editted_post = Post.new(session[:post_params])
     if params[:tag_ids].blank?
+      @tags = @post.tags.all
+    else
       @tags = Tag.where(id: params[:tag_ids])
       session[:new_tag_ids] = params[:tag_ids]
-    else
-      @tags = @post.tags.all
     end
     # 投稿内の画像を変更する場合
     if session[:temporary_image_pathes].present?
@@ -191,7 +191,7 @@ class Public::PostsController < ApplicationController
         File.unlink(image_path)
       end
     end
-    if session[:tag_ids].present?
+    if session[:new_tag_ids].present?
       @post.taggings.destroy_all
       @tags = Tag.where(id: session[:new_tag_ids])
       @tags.each do |tag|
