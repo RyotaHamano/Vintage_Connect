@@ -1,6 +1,7 @@
 if ($('#comments').hasClass('user')){
   $('#comments').html('<%= j(render 'admin/comments/user_comment', comments: @user_comments) %>');
   $('#deleted_comments').html('<%= j(render 'admin/comments/user_deleted_comment', deleted_comments: @user_deleted_comments) %>');
+  $('#status').html('<%= j(render 'admin/users/status', user: @user) %>')
 }else{
   $('#comments').html('<%= j(render 'admin/comments/post_comment', comments: @comments, post_item: @post) %>');
 }

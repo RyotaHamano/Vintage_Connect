@@ -35,10 +35,8 @@
       </div>
     </div>
     <div class="col-sm-12 col-md-6 col-lg-6">
-      <div class="text-center">
-        <strong>削除投稿数：<%= @user.number_of_deleted_posts.to_s %></strong>
-        <strong>削除コメント数：<%= @user.number_of_deleted_comments.to_s %></strong>
-        <strong>削除タグ数：<%= @user.number_of_deleted_tags.to_s %></strong>
+      <div id="status" class="text-center">
+        <%= render 'admin/users/status', user: @user %>
       </div>
       <div id="sort">
         <%= render 'admin/posts/user_index', posts: @posts %>

@@ -14,15 +14,15 @@ class Admin::TagsController < ApplicationController
   def disable
     tag = Tag.find(params[:id])
     tag.update(is_available: true)
-    user = tag.user
-    user.number_of_deleted_tags += 1
-    user.save
+    @user = tag.user
+    @user.number_of_deleted_tags += 1
+    @user.save
     taggings = tag.taggings.all
     taggings.destroy_all
     @tags = Tag.where(is_available: false).order(id: :desc)
     @disabled_tags = Tag.where(is_available: true).order(id: :desc)
-    @user_tags = user.tags.where(is_available: false).order(id: :desc)
-    @user_disabled_tags = user.tags.where(is_available: true).order(id: :desc)
+    @user_tags = @user.tags.where(is_available: false).order(id: :desc)
+    @user_disabled_tags = @user.tags.where(is_available: true).order(id: :desc)
     if params[:post_id].present?
       @post = Post.find(params[:post_id])
       @tags = @post.tags.where(is_available: false)
