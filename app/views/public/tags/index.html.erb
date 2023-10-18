@@ -1,6 +1,9 @@
 <div class="container">
   <div class="row text-center">
     <div class="col-sm-12 col-md-12 col-lg-12 mx-auto my-2 pt-2 border border-secondary border-3">
+      <div class="selected_tags">
+        
+      </div>
       <%= form_with url: search_tags_path, method: :get do |f| %>
         <div class="form-group d-flex flex-wrap">
           <%= f.collection_check_boxes :tag_ids, @tags, :id, :name, class:'form-control' do |b| %>

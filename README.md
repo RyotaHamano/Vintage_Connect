@@ -22,7 +22,13 @@
 * 好みの品物とめぐり合い、それを同好の士と共有したいと思った時
 ​
 ## 設計書
-後ほど作成予定
+- 実装機能リスト　https://docs.google.com/spreadsheets/d/1VRmHM5G8nnJEaalfh_eP6tZqUyzOMi4Vxn21dEB_HP4/edit?usp=sharing  
+- ER図　https://drive.google.com/file/d/1znIxCRnsvYgUvcHmT-f7J5_5yVljvG9r/view?usp=sharing
+- テーブル定義書　https://docs.google.com/spreadsheets/d/1QV7F98j44zuwKAJyVhzoUaCWNB4nPbg3dgT2ptzAG3k/edit?usp=sharing
+- UI FLOW　https://drive.google.com/file/d/1W3j3q9vJcn-96rVhiVXFx0M7xUxPrs4n/view?usp=sharing
+- アプリケーション詳細設計書　https://docs.google.com/spreadsheets/d/1HLVDm0hz8ciPFu-fconK8P9sPRozup6MUI8kgFS7e1Q/edit?usp=sharing
+- ワイヤーフレーム　https://drive.google.com/file/d/1lUxt6f5DiuwtipFPAZRlPkUVgdYj6vSa/view?usp=sharing
+- テスト仕様書　https://docs.google.com/spreadsheets/d/15l8PjRGKNGN1fIUM4awr417sQL7QtFpIaovXpOfjtRY/edit?usp=sharing
 ​
 ## 開発環境
 - OS：Linux(CentOS)
@@ -32,11 +38,8 @@
 - IDE：Cloud9
 ​
 ## 使用素材
-使用Gem
 - 「devise」https://github.com/heartcombo/devise
 - 「kaminari」https://github.com/kaminari/kaminari
 - 「enum_help」https://github.com/zmbacker/enum_help  
-実装機能リスト
-- https://docs.google.com/spreadsheets/d/1VRmHM5G8nnJEaalfh_eP6tZqUyzOMi4Vxn21dEB_HP4/edit?usp=sharing  
-フリー写真として以下を使用
+- 「whenever」https://github.com/javan/whenever
 - 「写真AC」https://www.photo-ac.com/
